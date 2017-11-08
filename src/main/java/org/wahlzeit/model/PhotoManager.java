@@ -97,7 +97,7 @@ public class PhotoManager extends ObjectManager {
         ImageStorage imageStorage = ImageStorage.getInstance();
 
         for (PhotoSize photoSize : PhotoSize.values()) {
-            log.config(LogBuilder.createSystemMessage().
+            getLogger().config(LogBuilder.createSystemMessage().
                     addAction("loading image").
                     addParameter("image size", photoSize.asString()).
                     addParameter("photo ID", photoIdAsString).toString());
@@ -108,13 +108,13 @@ public class PhotoManager extends ObjectManager {
                         photo.setImage(photoSize, (Image) rawImage);
                     }
                 } catch (IOException e) {
-                    log.warning(LogBuilder.createSystemMessage().
+                    getLogger().warning(LogBuilder.createSystemMessage().
                             addParameter("size", photoSize.asString()).
                             addParameter("photo ID", photoIdAsString).
                             addException("Could not load image although it exists", e).toString());
                 }
             } else {
-                log.config(LogBuilder.createSystemMessage().
+                getLogger().config(LogBuilder.createSystemMessage().
                         addParameter("Size does not exist", photoSize.asString()).toString());
             }
         }
@@ -153,12 +153,12 @@ public class PhotoManager extends ObjectManager {
                         imageStorage.writeImage(image, photoIdAsString, photoSize.asInt());
                     }
                 } catch (Exception e) {
-                    log.warning(LogBuilder.createSystemMessage().
+                    getLogger().warning(LogBuilder.createSystemMessage().
                             addException("Problem when storing image", e).toString());
                     moreSizesExist = false;
                 }
             } else {
-                log.config(LogBuilder.createSystemMessage().
+                getLogger().config(LogBuilder.createSystemMessage().
                         addParameter("No image for size", photoSize.asString()).toString());
                 moreSizesExist = false;
             }
@@ -178,7 +178,7 @@ public class PhotoManager extends ObjectManager {
         photoTagCollector.collect(tags, photo);
         for (Iterator<String> i = tags.iterator(); i.hasNext(); ) {
             Tag tag = new Tag(i.next(), photo.getId().asString());
-            log.config(LogBuilder.createSystemMessage().addParameter("Writing Tag", tag.asString()).toString());
+            getLogger().config(LogBuilder.createSystemMessage().addParameter("Writing Tag", tag.asString()).toString());
             writeObject(tag);
         }
     }
@@ -190,6 +190,10 @@ public class PhotoManager extends ObjectManager {
         if (hasPhoto(id)) {
             throw new IllegalStateException("Photo already exists!");
         }
+    }
+
+    protected Logger getLogger() {
+        return log;
     }
 
     /**
@@ -270,17 +274,17 @@ public class PhotoManager extends ObjectManager {
 
         for (Photo photo : existingPhotos) {
             if (!doHasPhoto(photo.getId())) {
-                log.config(LogBuilder.createSystemMessage().
+                getLogger().config(LogBuilder.createSystemMessage().
                         addParameter("Load Photo with ID", photo.getIdAsString()).toString());
                 loadScaledImages(photo);
                 doAddPhoto(photo);
             } else {
-                log.config(LogBuilder.createSystemMessage().
+                getLogger().config(LogBuilder.createSystemMessage().
                         addParameter("Already loaded Photo", photo.getIdAsString()).toString());
             }
         }
 
-        log.info(LogBuilder.createSystemMessage().addMessage("All photos loaded.").toString());
+        getLogger().info(LogBuilder.createSystemMessage().addMessage("All photos loaded.").toString());
     }
 
     /**

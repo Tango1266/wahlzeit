@@ -3,7 +3,7 @@
  *
  *  Classname: GurkenPhotoManager
  *  Author: Tango1266
- *  Version: 08.11.17 22:44
+ *  Version: 08.11.17 22:47
  *
  *  This file is part of the Wahlzeit photo rating application.
  *
@@ -22,7 +22,11 @@
  *  <http://www.gnu.org/licenses/>
  */
 
-package org.wahlzeit.model;
+package org.wahlzeit.model.domain;
+
+import org.wahlzeit.model.Photo;
+import org.wahlzeit.model.PhotoId;
+import org.wahlzeit.model.PhotoManager;
 
 import java.util.logging.Logger;
 
@@ -41,7 +45,12 @@ public class GurkenPhotoManager extends PhotoManager {
      *
      */
     public GurkenPhotoManager() {
-        photoTagCollector = PhotoFactory.getInstance().createPhotoTagCollector();
+        photoTagCollector = GurkenPhotoFactory.getInstance().createPhotoTagCollector();
+    }
+
+    @Override
+    protected Logger getLogger() {
+        return log;
     }
 
     /**
@@ -64,7 +73,7 @@ public class GurkenPhotoManager extends PhotoManager {
         Photo result = doGetPhotoFromId(id);
 
         if (result == null) {
-            result = PhotoFactory.getInstance().loadPhoto(id);
+            result = GurkenPhotoFactory.getInstance().loadPhoto(id);
             if (result != null) {
                 doAddPhoto(result);
             }
@@ -79,5 +88,4 @@ public class GurkenPhotoManager extends PhotoManager {
     public static final GurkenPhotoManager getInstance() {
         return instance;
     }
-
 }

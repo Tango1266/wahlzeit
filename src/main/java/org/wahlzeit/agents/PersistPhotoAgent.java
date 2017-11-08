@@ -24,8 +24,8 @@
 
 package org.wahlzeit.agents;
 
-import org.wahlzeit.model.GurkenPhotoManager;
 import org.wahlzeit.model.Photo;
+import org.wahlzeit.model.domain.GurkenPhotoManager;
 import org.wahlzeit.services.LogBuilder;
 
 import javax.servlet.ServletException;
