@@ -24,7 +24,10 @@
 
 package org.wahlzeit.main;
 
-import org.wahlzeit.model.*;
+import org.wahlzeit.model.GlobalsManager;
+import org.wahlzeit.model.PhotoCaseManager;
+import org.wahlzeit.model.User;
+import org.wahlzeit.model.UserManager;
 import org.wahlzeit.model.domain.GurkenPhotoFactory;
 import org.wahlzeit.model.domain.GurkenPhotoManager;
 import org.wahlzeit.model.persistence.DatastoreAdapter;
