@@ -73,7 +73,7 @@ public class GurkenPhotoFactory extends PhotoFactory {
      */
     @Override
     public Photo createPhoto() {
-        return new Photo();
+        return new GurkenPhoto();
     }
 
     /**
@@ -81,7 +81,7 @@ public class GurkenPhotoFactory extends PhotoFactory {
      */
     @Override
     public Photo createPhoto(PhotoId id) {
-        return new Photo(id);
+        return new GurkenPhoto(id);
     }
 
     /**
