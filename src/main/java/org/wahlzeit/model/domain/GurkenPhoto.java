@@ -25,8 +25,13 @@
 package org.wahlzeit.model.domain;
 
 import com.googlecode.objectify.annotation.Subclass;
+import jdk.nashorn.internal.runtime.regexp.RegExpMatcher;
+import org.wahlzeit.model.Location;
 import org.wahlzeit.model.Photo;
 import org.wahlzeit.model.PhotoId;
+
+import javax.annotation.RegEx;
+import java.util.regex.Pattern;
 
 /**
  * A gurkenphoto represents a user-provided (uploaded) photo of a cucumber.
@@ -35,10 +40,51 @@ import org.wahlzeit.model.PhotoId;
 @Subclass
 public class GurkenPhoto extends Photo {
 
+    private Taste taste;
+    private int size;
+    private String type;
+
     public GurkenPhoto() {
     }
 
     public GurkenPhoto(PhotoId myId) {
         super(myId);
+    }
+
+    public GurkenPhoto(String type, int sizeInMillimeter, Taste taste, Location location) {
+        this.type=type;
+        this.size=sizeInMillimeter;
+        this.taste=taste;
+        this.location=location;
+    }
+
+    public void setType(String type) {
+        assertStartsWithLiterals(type);
+        this.type = type;
+    }
+
+    private void assertStartsWithLiterals(String type) {
+        if(Pattern.matches("^(\\d.*)",type))
+            throw new IllegalArgumentException("Type should start with literals but is actually"+type);
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public void setTaste(Taste taste) {
+        this.taste = taste;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public Taste getTaste() {
+        return taste;
     }
 }
