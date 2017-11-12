@@ -58,7 +58,7 @@ public class PhotoManager extends ObjectManager {
     protected PhotoTagCollector photoTagCollector = null;
 
     /**
-     *
+     * TODO: Check whether the constructor should be private because of singleton
      */
     public PhotoManager() {
         photoTagCollector = PhotoFactory.getInstance().createPhotoTagCollector();

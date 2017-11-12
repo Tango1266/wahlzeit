@@ -107,5 +107,4 @@ public class PhotoUtil {
 
         log.config(LogBuilder.createSystemMessage().addParameter("Scaled image to size", size.asString()).toString());
     }
-
 }
