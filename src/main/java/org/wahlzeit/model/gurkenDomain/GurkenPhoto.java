@@ -3,7 +3,7 @@
  *
  *  Classname: GurkenPhoto
  *  Author: Tango1266
- *  Version: 08.11.17 23:00
+ *  Version: 13.11.17 00:21
  *
  *  This file is part of the Wahlzeit photo rating application.
  *
@@ -34,22 +34,27 @@ import java.util.regex.Pattern;
 /**
  * A gurkenphoto represents a user-provided (uploaded) photo of a cucumber.
  */
-
 @Subclass
 public class GurkenPhoto extends Photo {
 
+    /*Attributes for a GurkenPhoto*/
     private Taste taste;
     private int size;
     private String type;
 
+    /**
+     * only for testing
+     */
     public GurkenPhoto() {
+        id = PhotoId.getNextId();
     }
 
     public GurkenPhoto(PhotoId myId) {
         super(myId);
     }
 
-    public GurkenPhoto(String type, int sizeInMillimeter, Taste taste, Location location) {
+    public GurkenPhoto(PhotoId photoId, String type, int sizeInMillimeter, Taste taste, Location location) {
+        id = photoId;
         this.type = type;
         size = sizeInMillimeter;
         this.taste = taste;

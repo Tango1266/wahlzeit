@@ -1,3 +1,27 @@
+/*
+ *  Copyright
+ *
+ *  Classname: GurkenPhotoTest
+ *  Author: Tango1266
+ *  Version: 13.11.17 00:16
+ *
+ *  This file is part of the Wahlzeit photo rating application.
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public
+ *  License along with this program. If not, see
+ *  <http://www.gnu.org/licenses/>
+ */
+
 package org.wahlzeit.model.gurkenDomain;
 
 import org.junit.Assert;
@@ -5,12 +29,16 @@ import org.junit.Before;
 import org.junit.Test;
 import org.wahlzeit.model.Location;
 import org.wahlzeit.model.Photo;
+import org.wahlzeit.model.PhotoId;
 
+/**
+ * All test cases of the class {@link GurkenPhoto}.
+ */
 public class GurkenPhotoTest extends GurkenDomainTest {
 
-    String cucumberType;
-    int avgSizeInMillimeter;
-    Location noWhere;
+    public int avgSizeInMillimeter;
+    public Location noWhere;
+    public String cucumberType;
 
     @Before
     public void setUp() {
@@ -38,7 +66,7 @@ public class GurkenPhotoTest extends GurkenDomainTest {
 
     @Test
     public void createGurkenPhoto_throughConstructucter_attributesNotNull() {
-        GurkenPhoto gurkenPhoto = new GurkenPhoto(cucumberType, avgSizeInMillimeter, Taste.TASTELESS, noWhere);
+        GurkenPhoto gurkenPhoto = new GurkenPhoto(PhotoId.getNextId(), cucumberType, avgSizeInMillimeter, Taste.TASTELESS, noWhere);
         assertAttribuesAreAsExpected(gurkenPhoto);
     }
 
@@ -61,7 +89,7 @@ public class GurkenPhotoTest extends GurkenDomainTest {
         Assert.assertTrue(Photo.class.isAssignableFrom(GurkenPhoto.class));
     }
 
-    private void assertAttribuesAreAsExpected(GurkenPhoto gurkenPhoto) {
+    public void assertAttribuesAreAsExpected(GurkenPhoto gurkenPhoto) {
         Assert.assertNotNull(gurkenPhoto.getLocation());
         Assert.assertEquals(cucumberType, gurkenPhoto.getType());
         Assert.assertEquals(avgSizeInMillimeter, gurkenPhoto.getSize());

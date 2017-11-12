@@ -3,7 +3,7 @@
  *
  *  Classname: GurkenPhotoFactory
  *  Author: Tango1266
- *  Version: 08.11.17 22:56
+ *  Version: 13.11.17 00:21
  *
  *  This file is part of the Wahlzeit photo rating application.
  *
@@ -24,6 +24,7 @@
 
 package org.wahlzeit.model.gurkenDomain;
 
+import org.wahlzeit.model.Location;
 import org.wahlzeit.model.Photo;
 import org.wahlzeit.model.PhotoFactory;
 import org.wahlzeit.model.PhotoId;
@@ -32,7 +33,7 @@ import org.wahlzeit.services.LogBuilder;
 import java.util.logging.Logger;
 
 /**
- * An Abstract Factory for creating photos and related objects.
+ * An Abstract Factory for creating GurkenPhotos and related objects.
  */
 public class GurkenPhotoFactory extends PhotoFactory {
 
@@ -82,6 +83,10 @@ public class GurkenPhotoFactory extends PhotoFactory {
     @Override
     public Photo createPhoto(PhotoId id) {
         return new GurkenPhoto(id);
+    }
+
+    public GurkenPhoto createGurkenPhoto(PhotoId photoId, String cucumberType, int sizeInMillimeter, Taste taste, Location location) {
+        return new GurkenPhoto(photoId, cucumberType, sizeInMillimeter, taste, location);
     }
 
     /**

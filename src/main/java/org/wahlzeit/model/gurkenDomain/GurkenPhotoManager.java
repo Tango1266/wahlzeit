@@ -3,7 +3,7 @@
  *
  *  Classname: GurkenPhotoManager
  *  Author: Tango1266
- *  Version: 08.11.17 22:47
+ *  Version: 13.11.17 00:21
  *
  *  This file is part of the Wahlzeit photo rating application.
  *
@@ -31,7 +31,7 @@ import org.wahlzeit.model.PhotoManager;
 import java.util.logging.Logger;
 
 /**
- * A photo manager provides access to and manages photos.
+ * A photo manager provides access to and manages GurkenPhotos.
  */
 public class GurkenPhotoManager extends PhotoManager {
 
@@ -80,6 +80,16 @@ public class GurkenPhotoManager extends PhotoManager {
         }
 
         return result;
+    }
+
+    public final GurkenPhoto getGurkenPhoto(PhotoId id) {
+        return getInstance().getGurkenPhotoFromId(id);
+    }
+
+    public GurkenPhoto getGurkenPhotoFromId(PhotoId id) {
+        Photo gurkenPhoto = getInstance().getPhoto(id);
+
+        return gurkenPhoto instanceof GurkenPhoto ? (GurkenPhoto) gurkenPhoto : null;
     }
 
     /**

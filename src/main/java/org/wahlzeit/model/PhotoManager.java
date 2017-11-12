@@ -3,7 +3,7 @@
  *
  *  Classname: PhotoManager
  *  Author: Tango1266
- *  Version: 08.11.17 22:44
+ *  Version: 12.11.17 23:51
  *
  *  This file is part of the Wahlzeit photo rating application.
  *
@@ -357,6 +357,13 @@ public class PhotoManager extends ObjectManager {
         doAddPhoto(photo);
 
         GlobalsManager.getInstance().saveGlobals();
+    }
+
+    /**
+     * @methodtype command
+     */
+    public void removePhoto(Photo photo) throws IOException {
+        photoCache.remove(photo.id);
     }
 
 }

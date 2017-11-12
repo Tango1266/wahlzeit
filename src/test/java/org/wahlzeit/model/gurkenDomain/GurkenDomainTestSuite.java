@@ -3,7 +3,7 @@
  *
  *  Classname: GurkenDomainTestSuite
  *  Author: Tango1266
- *  Version: 12.11.17 21:48
+ *  Version: 12.11.17 21:56
  *
  *  This file is part of the Wahlzeit photo rating application.
  *
@@ -29,7 +29,9 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-
+        GurkenPhotoTest.class,
+        GurkenPhotoFactoryTest.class,
+        GurkenPhotoManagerTest.class,
 })
 public class GurkenDomainTestSuite {
 }
