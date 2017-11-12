@@ -24,7 +24,7 @@ import com.google.appengine.api.images.Image;
 import com.google.appengine.api.images.ImagesService;
 import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.Transform;
-import org.wahlzeit.model.domain.GurkenPhotoFactory;
+import org.wahlzeit.model.gurkenDomain.GurkenPhotoFactory;
 import org.wahlzeit.services.LogBuilder;
 
 import java.util.logging.Logger;

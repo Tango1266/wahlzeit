@@ -4,7 +4,7 @@ import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
 import org.wahlzeit.model.*;
-import org.wahlzeit.model.domain.GurkenPhoto;
+import org.wahlzeit.model.gurkenDomain.GurkenPhoto;
 import org.wahlzeit.model.persistence.DatastoreAdapter.ImageWrapper;
 
 /**

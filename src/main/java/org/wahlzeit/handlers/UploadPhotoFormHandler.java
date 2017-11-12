@@ -27,7 +27,7 @@ package org.wahlzeit.handlers;
 import com.google.appengine.api.images.Image;
 import org.wahlzeit.agents.AsyncTaskExecutor;
 import org.wahlzeit.model.*;
-import org.wahlzeit.model.domain.GurkenPhotoManager;
+import org.wahlzeit.model.gurkenDomain.GurkenPhotoManager;
 import org.wahlzeit.services.LogBuilder;
 import org.wahlzeit.utils.StringUtil;
 import org.wahlzeit.webparts.WebPart;

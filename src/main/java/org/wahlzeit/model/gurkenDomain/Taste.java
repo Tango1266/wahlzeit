@@ -1,9 +1,8 @@
-package org.wahlzeit.model.domain;
-
+package org.wahlzeit.model.gurkenDomain;
 
 import org.wahlzeit.utils.EnumValue;
 
-public enum  Taste implements EnumValue {
+public enum Taste implements EnumValue {
 
     /**
      *
@@ -15,8 +14,6 @@ public enum  Taste implements EnumValue {
     MILD(4),
     SALTY(5);
 
-    private int value;
-
     private static Taste[] allValues = {
             TASTELESS,
             SALTY,
@@ -25,7 +22,6 @@ public enum  Taste implements EnumValue {
             SWEET,
             MILD,
     };
-
     private static String[] valueNames = {
             "tasteless",
             "sour",
@@ -34,8 +30,9 @@ public enum  Taste implements EnumValue {
             "mild",
             "salty",
     };
+    private int value;
 
-    Taste(int value){
+    Taste(int value) {
         this.value = value;
     }
 
@@ -56,6 +53,6 @@ public enum  Taste implements EnumValue {
 
     @Override
     public String getTypeName() {
-        return this.getClass().getName();
+        return getClass().getName();
     }
 }

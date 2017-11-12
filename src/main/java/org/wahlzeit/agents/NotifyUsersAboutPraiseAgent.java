@@ -26,7 +26,7 @@ package org.wahlzeit.agents;
 
 import com.google.apphosting.api.ApiProxy;
 import org.wahlzeit.model.*;
-import org.wahlzeit.model.domain.GurkenPhotoManager;
+import org.wahlzeit.model.gurkenDomain.GurkenPhotoManager;
 import org.wahlzeit.services.EmailAddress;
 import org.wahlzeit.services.LogBuilder;
 import org.wahlzeit.services.mailing.EmailService;

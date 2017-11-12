@@ -22,15 +22,13 @@
  *  <http://www.gnu.org/licenses/>
  */
 
-package org.wahlzeit.model.domain;
+package org.wahlzeit.model.gurkenDomain;
 
 import com.googlecode.objectify.annotation.Subclass;
-import jdk.nashorn.internal.runtime.regexp.RegExpMatcher;
 import org.wahlzeit.model.Location;
 import org.wahlzeit.model.Photo;
 import org.wahlzeit.model.PhotoId;
 
-import javax.annotation.RegEx;
 import java.util.regex.Pattern;
 
 /**
@@ -52,20 +50,15 @@ public class GurkenPhoto extends Photo {
     }
 
     public GurkenPhoto(String type, int sizeInMillimeter, Taste taste, Location location) {
-        this.type=type;
-        this.size=sizeInMillimeter;
-        this.taste=taste;
-        this.location=location;
+        this.type = type;
+        size = sizeInMillimeter;
+        this.taste = taste;
+        this.location = location;
     }
 
     public void setType(String type) {
         assertStartsWithLiterals(type);
         this.type = type;
-    }
-
-    private void assertStartsWithLiterals(String type) {
-        if(Pattern.matches("^(\\d.*)",type))
-            throw new IllegalArgumentException("Type should start with literals but is actually"+type);
     }
 
     public void setSize(int size) {
@@ -86,5 +79,11 @@ public class GurkenPhoto extends Photo {
 
     public Taste getTaste() {
         return taste;
+    }
+
+    private void assertStartsWithLiterals(String type) {
+        if (Pattern.matches("^(\\d.*)", type)) {
+            throw new IllegalArgumentException("Type should start with literals but is actually" + type);
+        }
     }
 }

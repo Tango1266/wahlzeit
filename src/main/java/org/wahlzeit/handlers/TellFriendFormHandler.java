@@ -28,7 +28,7 @@ import org.wahlzeit.model.AccessRights;
 import org.wahlzeit.model.ModelConfig;
 import org.wahlzeit.model.Photo;
 import org.wahlzeit.model.UserSession;
-import org.wahlzeit.model.domain.GurkenPhotoManager;
+import org.wahlzeit.model.gurkenDomain.GurkenPhotoManager;
 import org.wahlzeit.services.EmailAddress;
 import org.wahlzeit.services.LogBuilder;
 import org.wahlzeit.services.mailing.EmailService;

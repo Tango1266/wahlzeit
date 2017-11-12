@@ -22,7 +22,7 @@
  *  <http://www.gnu.org/licenses/>
  */
 
-package org.wahlzeit.model.domain;
+package org.wahlzeit.model.gurkenDomain;
 
 import org.wahlzeit.model.Photo;
 import org.wahlzeit.model.PhotoFactory;

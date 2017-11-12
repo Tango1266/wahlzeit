@@ -20,7 +20,7 @@
 
 package org.wahlzeit.model;
 
-import org.wahlzeit.model.domain.GurkenPhotoFactory;
+import org.wahlzeit.model.gurkenDomain.GurkenPhotoFactory;
 import org.wahlzeit.services.Language;
 import org.wahlzeit.services.Session;
 import org.wahlzeit.utils.HtmlUtil;

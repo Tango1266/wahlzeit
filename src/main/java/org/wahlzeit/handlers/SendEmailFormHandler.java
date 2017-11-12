@@ -25,7 +25,7 @@
 package org.wahlzeit.handlers;
 
 import org.wahlzeit.model.*;
-import org.wahlzeit.model.domain.GurkenPhotoManager;
+import org.wahlzeit.model.gurkenDomain.GurkenPhotoManager;
 import org.wahlzeit.services.LogBuilder;
 import org.wahlzeit.services.mailing.EmailService;
 import org.wahlzeit.services.mailing.EmailServiceManager;

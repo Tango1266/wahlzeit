@@ -28,7 +28,7 @@ import com.google.appengine.api.images.Image;
 import org.apache.http.HttpStatus;
 import org.wahlzeit.model.Photo;
 import org.wahlzeit.model.PhotoSize;
-import org.wahlzeit.model.domain.GurkenPhotoManager;
+import org.wahlzeit.model.gurkenDomain.GurkenPhotoManager;
 import org.wahlzeit.model.persistence.ImageStorage;
 import org.wahlzeit.services.LogBuilder;
 
