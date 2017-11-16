@@ -1,9 +1,9 @@
 /*
  *  Copyright
  *
+ *  Classname: CoordinateTest
  *  Author: Tango1266
- *
- *  Version: 05.11.17 21:39
+ *  Version: 16.11.17 16:10
  *
  *  This file is part of the Wahlzeit photo rating application.
  *
@@ -22,29 +22,15 @@
  *  <http://www.gnu.org/licenses/>
  */
 
-package org.wahlzeit.model;
+package org.wahlzeit.model.coordinates;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.wahlzeit.model.coordinates.CoordinatesTestSuite;
-import org.wahlzeit.model.gurkenDomain.GurkenDomainTestSuite;
-import org.wahlzeit.model.persistence.PersistenceTestSuite;
+import org.junit.Assert;
 
-@RunWith(Suite.class)
-@Suite.SuiteClasses({
-        GurkenDomainTestSuite.class,
-        PersistenceTestSuite.class,
-        AccessRightsTest.class,
-        FlagReasonTest.class,
-        GenderTest.class,
-        GuestTest.class,
-        LocationTest.class,
-        CoordinatesTestSuite.class,
-        PhotoFilterTest.class,
-        TagsTest.class,
-        UserStatusTest.class,
-        ValueTest.class
+public class CoordinateTest {
+    protected static final Double VALUE_EXCEEDING_COORD_MAXVALUE = Double.MAX_VALUE - 1E291;
 
-})
-public class ModelTestSuite {
+    protected static void CheckDistance(Coordinate first, Coordinate second, double expectedDistance, double tolerance) {
+        double distance = first.getDistance(second);
+        Assert.assertEquals(expectedDistance, distance, tolerance);
+    }
 }

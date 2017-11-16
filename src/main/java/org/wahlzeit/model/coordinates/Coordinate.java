@@ -1,9 +1,9 @@
 /*
  *  Copyright
  *
+ *  Classname: Coordinate
  *  Author: Tango1266
- *
- *  Version: 05.11.17 21:39
+ *  Version: 16.11.17 15:29
  *
  *  This file is part of the Wahlzeit photo rating application.
  *
@@ -22,29 +22,23 @@
  *  <http://www.gnu.org/licenses/>
  */
 
-package org.wahlzeit.model;
+package org.wahlzeit.model.coordinates;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.wahlzeit.model.coordinates.CoordinatesTestSuite;
-import org.wahlzeit.model.gurkenDomain.GurkenDomainTestSuite;
-import org.wahlzeit.model.persistence.PersistenceTestSuite;
+import org.wahlzeit.model.coordinates.impl.CartesianCoordinate;
+import org.wahlzeit.model.coordinates.impl.SphericCoordinate;
 
-@RunWith(Suite.class)
-@Suite.SuiteClasses({
-        GurkenDomainTestSuite.class,
-        PersistenceTestSuite.class,
-        AccessRightsTest.class,
-        FlagReasonTest.class,
-        GenderTest.class,
-        GuestTest.class,
-        LocationTest.class,
-        CoordinatesTestSuite.class,
-        PhotoFilterTest.class,
-        TagsTest.class,
-        UserStatusTest.class,
-        ValueTest.class
+public interface Coordinate {
 
-})
-public class ModelTestSuite {
+    CartesianCoordinate asCartesianCoordinate();
+
+    SphericCoordinate asSphericCoordinate();
+
+    double getDistance(Coordinate otherCoord);
+
+    double getCartesianDistance(Coordinate otherCoord);
+
+    double getSphericDistance(Coordinate otherCoord);
+
+    boolean isEqual(Coordinate otherCoord);
+
 }

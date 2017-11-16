@@ -1,9 +1,9 @@
 /*
  *  Copyright
  *
+ *  Classname: CartesianCoordinate
  *  Author: Tango1266
- *
- *  Version: 05.11.17 21:39
+ *  Version: 16.11.17 15:24
  *
  *  This file is part of the Wahlzeit photo rating application.
  *
@@ -22,21 +22,23 @@
  *  <http://www.gnu.org/licenses/>
  */
 
-package org.wahlzeit.model;
+package org.wahlzeit.model.coordinates.impl;
+
+import org.wahlzeit.model.coordinates.Coordinate;
 
 /**
  * Represents a Cartesian coordinate of a three dimensional Cartesian coordinate system
  */
-public class Coordinate {
+public class CartesianCoordinate implements Coordinate {
     private double y;
     private double x;
     private double z;
     public static final Double MAX_VALUE = Double.MAX_VALUE - 1E292;
 
-    public Coordinate() {
+    public CartesianCoordinate() {
     }
 
-    public Coordinate(double y, double x, double z) {
+    public CartesianCoordinate(double y, double x, double z) {
         setY(y);
         setX(x);
         setZ(z);
@@ -78,23 +80,46 @@ public class Coordinate {
         this.z = z;
     }
 
+    @Override
+    public CartesianCoordinate asCartesianCoordinate() {
+        return this;
+    }
+
+    @Override
+    public SphericCoordinate asSphericCoordinate() {
+        return null;
+    }
+
     /**
      * @return -1, if otherCood is null or NoWhereCoordinate. The direct distance, otherwise.
      */
+    @Override
     public double getDistance(Coordinate otherCoord) {
+        return getCartesianDistance(otherCoord);
+    }
+
+    @Override
+    public double getCartesianDistance(Coordinate otherCoord) {
         if (otherCoord instanceof NoWhereCoordinate || otherCoord == null) {
             return -1;
         }
-        double xDifference = getX() - otherCoord.getX();
-        double yDifference = getY() - otherCoord.getY();
-        double zDifference = getZ() - otherCoord.getZ();
+        CartesianCoordinate otherCartCoord = otherCoord.asCartesianCoordinate();
+        double xDifference = getX() - otherCartCoord.getX();
+        double yDifference = getY() - otherCartCoord.getY();
+        double zDifference = getZ() - otherCartCoord.getZ();
         double radicand = square(xDifference) + square(yDifference) + square(zDifference);
         return Math.sqrt(radicand);
+    }
+
+    @Override
+    public double getSphericDistance(Coordinate otherCoord) {
+        return 0;
     }
 
     /**
      * @return true, if all ordinates of the compared Coordinates are equal.
      */
+    @Override
     public boolean isEqual(Coordinate otherCoord) {
         if (otherCoord == this) {
             return true;
@@ -102,9 +127,11 @@ public class Coordinate {
         if (otherCoord == null) {
             return false;
         }
-        boolean xOrdinatesAreEqual = doublesAreEqual(getX(), otherCoord.getX());
-        boolean yOrdinatesAreEqual = doublesAreEqual(getY(), otherCoord.getY());
-        boolean zOrdinatesAreEqual = doublesAreEqual(getZ(), otherCoord.getZ());
+        CartesianCoordinate otherCartCoord = otherCoord.asCartesianCoordinate();
+
+        boolean xOrdinatesAreEqual = doublesAreEqual(getX(), otherCartCoord.getX());
+        boolean yOrdinatesAreEqual = doublesAreEqual(getY(), otherCartCoord.getY());
+        boolean zOrdinatesAreEqual = doublesAreEqual(getZ(), otherCartCoord.getZ());
         return xOrdinatesAreEqual && yOrdinatesAreEqual && zOrdinatesAreEqual;
     }
 
@@ -129,7 +156,7 @@ public class Coordinate {
      */
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Coordinate) {
+        if (obj instanceof CartesianCoordinate) {
             return isEqual((Coordinate) obj);
         }
         return false;

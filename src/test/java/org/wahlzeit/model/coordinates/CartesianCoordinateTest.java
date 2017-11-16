@@ -1,9 +1,9 @@
 /*
  *  Copyright
  *
+ *  Classname: CartesianCoordinateTest
  *  Author: Tango1266
- *
- *  Version: 05.11.17 21:39
+ *  Version: 16.11.17 15:58
  *
  *  This file is part of the Wahlzeit photo rating application.
  *
@@ -22,19 +22,36 @@
  *  <http://www.gnu.org/licenses/>
  */
 
-package org.wahlzeit.model;
+package org.wahlzeit.model.coordinates;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.wahlzeit.model.coordinates.impl.CartesianCoordinate;
 
 import java.util.HashMap;
 
-public class CoordinateTest extends NoWhereCoordinateTest {
+public class CartesianCoordinateTest extends CoordinateTest {
+
+    CartesianCoordinate octantIa;
+    CartesianCoordinate octantIb;
+    CartesianCoordinate octantVII;
+    CartesianCoordinate layerXYa;
+    CartesianCoordinate layerXYb;
+
+    @Before
+    public void setUp() {
+        octantIa = new CartesianCoordinate(1.0, 2.0, 3.0);
+        octantIb = new CartesianCoordinate(1.0, 2.0, 3.0);
+        octantVII = new CartesianCoordinate(-1.0, -2.0, -3.0);
+        layerXYa = new CartesianCoordinate(0, 1, 0);
+        layerXYb = new CartesianCoordinate(5, 1, 0);
+    }
 
     /*CreationTests*/
     @Test
     public void createCoordinate_initThroughSetter_notNull() {
-        Coordinate foo = new Coordinate();
+        CartesianCoordinate foo = new CartesianCoordinate();
         foo.setX(0.0);
         foo.setY(0.0);
         foo.setZ(-1.0);
@@ -43,32 +60,32 @@ public class CoordinateTest extends NoWhereCoordinateTest {
 
     @Test
     public void createCoordinate_initThroughConstructor_notNull() {
-        Coordinate bar = new Coordinate(0.0, 0.0, -1.0);
+        Coordinate bar = new CartesianCoordinate(0.0, 0.0, -1.0);
         Assert.assertNotNull(bar);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void createCoordinate_withExceedingMaxValueInZ_shouldThroughException() {
-        new Coordinate(1, 1, VALUE_EXCEEDING_COORD_MAXVALUE);
+        new CartesianCoordinate(1, 1, VALUE_EXCEEDING_COORD_MAXVALUE);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void createCoordinate_withExceedingMaxValueInX_shouldThroughException() {
-        new Coordinate(1, VALUE_EXCEEDING_COORD_MAXVALUE, 1);
+        new CartesianCoordinate(1, VALUE_EXCEEDING_COORD_MAXVALUE, 1);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void createCoordinate_withExceedingMaxValueInY_shouldThroughIllegalArgumentException() {
-        new Coordinate(VALUE_EXCEEDING_COORD_MAXVALUE, 1, 1);
+        new CartesianCoordinate(VALUE_EXCEEDING_COORD_MAXVALUE, 1, 1);
     }
 
     @Test
     public void createCoordinate_belowMaxValue_shouldNOTThroughExceptions() {
         Double valueBelowCoordMaxValue = Double.MAX_VALUE - 1E292;
         try {
-            new Coordinate(1, 1, valueBelowCoordMaxValue);
-            new Coordinate(1, valueBelowCoordMaxValue, 1);
-            new Coordinate(valueBelowCoordMaxValue, 1, 1);
+            new CartesianCoordinate(1, 1, valueBelowCoordMaxValue);
+            new CartesianCoordinate(1, valueBelowCoordMaxValue, 1);
+            new CartesianCoordinate(valueBelowCoordMaxValue, 1, 1);
         } catch (Exception ex) {
             Assert.fail("Exception was thrown but shouldn't.");
         }
@@ -77,9 +94,9 @@ public class CoordinateTest extends NoWhereCoordinateTest {
     @Test
     public void createCoordinate_withCoordMaxValue_shouldNOTThroughExceptions() {
         try {
-            new Coordinate(1, 1, Coordinate.MAX_VALUE);
-            new Coordinate(1, Coordinate.MAX_VALUE, 1);
-            new Coordinate(Coordinate.MAX_VALUE, 1, 1);
+            new CartesianCoordinate(1, 1, CartesianCoordinate.MAX_VALUE);
+            new CartesianCoordinate(1, CartesianCoordinate.MAX_VALUE, 1);
+            new CartesianCoordinate(CartesianCoordinate.MAX_VALUE, 1, 1);
         } catch (Exception ex) {
             Assert.fail("Exception was thrown but shouldn't.");
         }
@@ -87,15 +104,15 @@ public class CoordinateTest extends NoWhereCoordinateTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void createCoordinate_belowCoordMinValues_shouldThroughIllegalArgumentException() {
-        new Coordinate(1, 1, -VALUE_EXCEEDING_COORD_MAXVALUE);
+        new CartesianCoordinate(1, 1, -VALUE_EXCEEDING_COORD_MAXVALUE);
     }
 
     @Test
     public void createCoordinate_aboveCoordMinValue_shouldNOTThroughExceptions() {
         try {
-            new Coordinate(1, 1, -Coordinate.MAX_VALUE);
-            new Coordinate(1, -Coordinate.MAX_VALUE, 1);
-            new Coordinate(-Coordinate.MAX_VALUE, 1, 1);
+            new CartesianCoordinate(1, 1, -CartesianCoordinate.MAX_VALUE);
+            new CartesianCoordinate(1, -CartesianCoordinate.MAX_VALUE, 1);
+            new CartesianCoordinate(-CartesianCoordinate.MAX_VALUE, 1, 1);
         } catch (Exception ex) {
             Assert.fail("Exception was thrown but shouldn't.");
         }
@@ -153,8 +170,8 @@ public class CoordinateTest extends NoWhereCoordinateTest {
     public void someCoordinates_withMarginalDifferentOrdinate_areNotEqual() {
         double smallValueA = 0.0000000000000000000000000011;
         double smallValueB = 0.0000000000000000000000000012;
-        Coordinate coordinateA = new Coordinate(smallValueA, smallValueA, smallValueA);
-        Coordinate coordinateB = new Coordinate(smallValueB, smallValueB, smallValueB);
+        Coordinate coordinateA = new CartesianCoordinate(smallValueA, smallValueA, smallValueA);
+        Coordinate coordinateB = new CartesianCoordinate(smallValueB, smallValueB, smallValueB);
         Assert.assertNotEquals(coordinateA, coordinateB);
     }
 
@@ -162,8 +179,8 @@ public class CoordinateTest extends NoWhereCoordinateTest {
     public void someCoordinate_withCalculatedOrdinate_areEqual() {
         double smallValueA = 1.0;
         double smallValueB = 1 / 3.0 + 1 / 3.0 + 1 / 3.0;
-        Coordinate coordinateA = new Coordinate(smallValueA, smallValueA, smallValueA);
-        Coordinate coordinateB = new Coordinate(smallValueB, smallValueB, smallValueB);
+        Coordinate coordinateA = new CartesianCoordinate(smallValueA, smallValueA, smallValueA);
+        Coordinate coordinateB = new CartesianCoordinate(smallValueB, smallValueB, smallValueB);
         Assert.assertEquals(coordinateA, coordinateB);
     }
 
@@ -209,10 +226,9 @@ public class CoordinateTest extends NoWhereCoordinateTest {
 
     @Test
     public void distanceOfCoordinate_withOneCoordinateMaxAndMinOrdinate_is0() {
-        Coordinate minCoordinate = new Coordinate(Coordinate.MAX_VALUE * (-1), 0, 0);
-        Coordinate maxCoordinate = new Coordinate(Coordinate.MAX_VALUE, 0, 0);
-        double expectedDistance = Coordinate.MAX_VALUE - Coordinate.MAX_VALUE * (-1);
+        Coordinate minCoordinate = new CartesianCoordinate(CartesianCoordinate.MAX_VALUE * (-1), 0, 0);
+        Coordinate maxCoordinate = new CartesianCoordinate(CartesianCoordinate.MAX_VALUE, 0, 0);
+        double expectedDistance = CartesianCoordinate.MAX_VALUE - CartesianCoordinate.MAX_VALUE * (-1);
         Assert.assertEquals(expectedDistance, minCoordinate.getDistance(maxCoordinate), 0);
     }
-
 }
