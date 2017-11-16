@@ -26,41 +26,30 @@ package org.wahlzeit.model.coordinates.impl;
 
 import org.wahlzeit.model.coordinates.Coordinate;
 
+/**
+ */
 public class SphericCoordinate implements Coordinate {
     private double longitude;
+    private double latitude;
     private double radius;
 
-    @Override
-    public CartesianCoordinate asCartesianCoordinate() {
-        return null;
+    public static final double LONGITUDE_MAX_VALUE = 90.00;
+    public static final double LATITUDE_MAX_VALUE = 180.00;
+    public static final double PRECISION = 1.0E-10;
+    public static final double EARTH_RADIUS_METER = 6_378_000;
+
+    public SphericCoordinate(double latitude, double longitude) {
+        setRadius(EARTH_RADIUS_METER);
+        this.longitude = longitude;
+        this.latitude = latitude;
     }
 
-    @Override
-    public SphericCoordinate asSphericCoordinate() {
-        return null;
-    }
-
-    @Override
-    public double getDistance(Coordinate otherCoord) {
-        return 0;
-    }
-
-    @Override
-    public double getCartesianDistance(Coordinate otherCoord) {
-        return 0;
-    }
-
-    @Override
-    public double getSphericDistance(Coordinate otherCoord) {
-        return 0;
-    }
-
-    @Override
-    public boolean isEqual(Coordinate otherCoord) {
-        return false;
+    public SphericCoordinate() {
+        setRadius(EARTH_RADIUS_METER);
     }
 
     public void setLongitude(double longitude) {
+        assertValueIsInRange(longitude, LONGITUDE_MAX_VALUE);
         this.longitude = longitude;
     }
 
@@ -75,4 +64,99 @@ public class SphericCoordinate implements Coordinate {
     public void setRadius(double radius) {
         this.radius = radius;
     }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        assertValueIsInRange(latitude, LATITUDE_MAX_VALUE);
+        this.latitude = latitude;
+    }
+
+    @Override
+    public CartesianCoordinate asCartesianCoordinate() {
+        double latitudeAsRad = Math.toRadians(getLatitude());
+        double longitudeAsRad = Math.toRadians(getLongitude());
+
+        double x = getRadius() * Math.sin(latitudeAsRad) * Math.cos(longitudeAsRad);
+        double y = getRadius() * Math.sin(latitudeAsRad) * Math.sin(longitudeAsRad);
+        double z = getRadius() * Math.cos(latitudeAsRad);
+        return new CartesianCoordinate(x, y, z);
+    }
+
+    @Override
+    public SphericCoordinate asSphericCoordinate() {
+        return this;
+    }
+
+    @Override
+    public double getDistance(Coordinate otherCoord) {
+        return getSphericDistance(otherCoord);
+    }
+
+    @Override
+    public double getCartesianDistance(Coordinate otherCoord) {
+        return asCartesianCoordinate().getDistance(otherCoord);
+    }
+
+    @Override
+    public double getSphericDistance(Coordinate otherCoord) {
+        SphericCoordinate otherSphCoord = otherCoord.asSphericCoordinate();
+        double latitudeAsRad = Math.toRadians(getLatitude());
+        double otherLatitudeAsRad = Math.toRadians(otherSphCoord.getLatitude());
+        double longitudeDiffAsRad = Math.toRadians(otherSphCoord.longitude - getLongitude());
+
+        double sinLatitudeProduct = Math.sin(latitudeAsRad) * Math.sin(otherLatitudeAsRad);
+        double cosLatitudeProduct = Math.cos(latitudeAsRad) * Math.cos(otherLatitudeAsRad);
+        double cosLongitudeDiff = Math.cos(longitudeDiffAsRad);
+        double acosSum = Math.acos(sinLatitudeProduct + (cosLatitudeProduct * cosLongitudeDiff));
+
+        return getRadius() * acosSum;
+    }
+
+    @Override
+    public boolean isEqual(Coordinate otherCoord) {
+        if (this == otherCoord) {
+            return true;
+        }
+        if (otherCoord == null) {
+            return false;
+        }
+
+        SphericCoordinate otherSpherCoord = otherCoord.asSphericCoordinate();
+
+        if (Double.compare(otherSpherCoord.getLongitude(), getLongitude()) != 0) {
+            return false;
+        }
+        if (Double.compare(otherSpherCoord.getLatitude(), getLatitude()) != 0) {
+            return false;
+        }
+        return Double.compare(otherSpherCoord.getRadius(), getRadius()) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        temp = Double.doubleToLongBits(getLongitude());
+        result = (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(getLatitude());
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(getRadius());
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof Coordinate && isEqual((Coordinate) o);
+    }
+
+    private void assertValueIsInRange(double value, double maxValue) {
+        if (maxValue - Math.abs(value) < -PRECISION) {
+            throw new IllegalArgumentException("The value \"" + value + "\" must be in the range of [-" + maxValue + ":" + maxValue + "]");
+        }
+    }
+
 }

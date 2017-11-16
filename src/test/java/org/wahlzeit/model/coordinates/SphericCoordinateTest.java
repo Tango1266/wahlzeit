@@ -25,10 +25,51 @@
 package org.wahlzeit.model.coordinates;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.wahlzeit.model.coordinates.impl.SphericCoordinate;
 
+/**
+ * https://www.kompf.de/gps/distcalc.html
+ */
 public class SphericCoordinateTest extends CoordinateTest {
+
+    private SphericCoordinate ruesselsheimBhf;
+    private SphericCoordinate ruesselsheimOpelbruecke;
+    private SphericCoordinate berlinBrandBurgTor;
+    private SphericCoordinate lissabonTejoBruecke;
+
+    final double[] RADIANS = {-1.0, 0, 0.1, 1, 123456};
+    final double VALUE = 2.22;
+    final double MIN_PRECISION = 0.00000001;
+    final double LATITUDE_MAX = 180.00;
+    final double LONGITUDE_MAX = 90.00;
+
+    SphericCoordinate unsettedCoord;
+
+    @Before
+    public void setUp() {
+        unsettedCoord = new SphericCoordinate();
+
+        //Coords from https://www.kompf.de/gps/distcalc.html
+        ruesselsheimBhf = new SphericCoordinate(49.9917, 8.41321);
+        ruesselsheimOpelbruecke = new SphericCoordinate(50.0049, 8.42182);
+
+        berlinBrandBurgTor = new SphericCoordinate(52.5164, 13.3777);
+        lissabonTejoBruecke = new SphericCoordinate(38.692668, -9.177944);
+    }
+
+    @Test
+    public void staticMaxValues_forLongitude_is90() {
+        Assert.assertEquals(LATITUDE_MAX, SphericCoordinate.LATITUDE_MAX_VALUE, 0);
+        Assert.assertEquals(LONGITUDE_MAX, SphericCoordinate.LONGITUDE_MAX_VALUE, 0);
+    }
+
+    @Test
+    public void staticMaxValues_forLatitude_is180() {
+        Assert.assertEquals(LATITUDE_MAX, SphericCoordinate.LATITUDE_MAX_VALUE, 0);
+        Assert.assertEquals(LONGITUDE_MAX, SphericCoordinate.LONGITUDE_MAX_VALUE, 0);
+    }
 
     @Test
     public void createSpericCoordinate_notNull() {
@@ -36,19 +77,30 @@ public class SphericCoordinateTest extends CoordinateTest {
     }
 
     @Test
+    public void getLongitude_afterCreatingCoordWithValue_returnsValue() {
+        SphericCoordinate sphCord = new SphericCoordinate(-VALUE, VALUE);
+        Assert.assertEquals(VALUE, sphCord.getLongitude(), 0);
+    }
+
+    @Test
     public void getLongitude_afterSettingItToValue_returnsValue() {
         SphericCoordinate sphCord = new SphericCoordinate();
-        double value = 2.22;
-        sphCord.setLongitude(value);
-        Assert.assertEquals(value, sphCord.getLongitude(), 0);
+        sphCord.setLongitude(VALUE);
+        Assert.assertEquals(VALUE, sphCord.getLongitude(), 0);
+    }
+
+    @Test
+    public void getLatitude_afterSettingItToValue_returnsValue() {
+        SphericCoordinate sphCord = new SphericCoordinate();
+        sphCord.setLatitude(VALUE);
+        Assert.assertEquals(VALUE, sphCord.getLatitude(), 0);
     }
 
     @Test
     public void getRadius_afterSettingItToValue_returnsValue() {
         SphericCoordinate sphCord = new SphericCoordinate();
-        double value = 2.22;
-        sphCord.setRadius(value);
-        Assert.assertEquals(value, sphCord.getRadius(), 0);
+        sphCord.setRadius(VALUE);
+        Assert.assertEquals(VALUE, sphCord.getRadius(), 0);
     }
 
     @Test
@@ -61,4 +113,83 @@ public class SphericCoordinateTest extends CoordinateTest {
         Assert.assertFalse(SphericCoordinate.class.isAssignableFrom(Coordinate.class));
     }
 
+    @Test
+    public void setLongitude_withinMaxValueRange_shouldNotThrowException() {
+        try {
+            unsettedCoord.setLongitude(LONGITUDE_MAX);
+            unsettedCoord.setLongitude(-LONGITUDE_MAX);
+        } catch (Exception ex) {
+            Assert.fail();
+        }
+    }
+
+    @Test
+    public void setLatitude_withinMaxValueRange_shouldNotThrowException() {
+        try {
+            unsettedCoord.setLatitude(LATITUDE_MAX);
+            unsettedCoord.setLatitude(-LATITUDE_MAX);
+        } catch (Exception ex) {
+            Assert.fail();
+        }
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void setLongitude_greaterThan90_shouldThrowException() {
+        unsettedCoord.setLongitude(LONGITUDE_MAX + MIN_PRECISION);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void setLongitude_lessThanMinus90_shouldThrowException() {
+        unsettedCoord.setLongitude(-LONGITUDE_MAX - MIN_PRECISION);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void setLatidude_greaterThan180_shouldThrowException() {
+        unsettedCoord.setLatitude(LATITUDE_MAX + MIN_PRECISION);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void setLatidude_lessThanMinus180_shouldThrowException() {
+        unsettedCoord.setLatitude(-LATITUDE_MAX - MIN_PRECISION);
+    }
+
+    @Test
+    public void getSphericDistance_rueselBhfToOpelBrueck_returns1593() {
+        double expected = 1593;
+        double tolerance = expected * 0.05;
+        Assert.assertEquals(expected, ruesselsheimBhf.getSphericDistance(ruesselsheimOpelbruecke), tolerance);
+        Assert.assertEquals(expected, ruesselsheimBhf.getDistance(ruesselsheimOpelbruecke), tolerance);
+    }
+
+    @Test
+    public void getSphericDistance_berlinToLissabon_returns2317722() {
+        double expected = 2317722;
+        double tolerance = expected * 0.05;
+        Assert.assertEquals(expected, berlinBrandBurgTor.getSphericDistance(lissabonTejoBruecke), tolerance);
+        Assert.assertEquals(expected, berlinBrandBurgTor.getDistance(lissabonTejoBruecke), tolerance);
+    }
+
+    @Test
+    public void isEquals_berlinAndLissabon_isFalse() {
+        Assert.assertFalse(berlinBrandBurgTor.isEqual(lissabonTejoBruecke));
+    }
+
+    @Test
+    public void isEquals_berlinAndBerlin_isTrue() {
+        Assert.assertTrue(berlinBrandBurgTor.isEqual(berlinBrandBurgTor));
+    }
+
+    @Test
+    public void getCartesianDistance_rueselBhfToOpelBrueck_returns1593() {
+        double expected = 1593;
+        double tolerance = expected * 0.05;
+        Assert.assertEquals(expected, ruesselsheimBhf.getCartesianDistance(ruesselsheimOpelbruecke), tolerance);
+    }
+
+    @Test
+    public void getCartesianDistance_berlinToLissabon_returns2317722() {
+        double expected = 2317722;
+        double tolerance = expected * 0.05;
+        Assert.assertEquals(expected, berlinBrandBurgTor.getCartesianDistance(lissabonTejoBruecke), tolerance);
+    }
 }

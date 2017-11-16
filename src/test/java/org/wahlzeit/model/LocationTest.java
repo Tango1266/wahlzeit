@@ -43,8 +43,8 @@ public class LocationTest {
     @Before
     public void setUp() {
         noWhereLocation = new Location(new NoWhereCoordinate());
-        fooCoords = new CartesianCoordinate(0, 1, 2);
-        barCoords = new CartesianCoordinate(-2, -1, 0);
+        fooCoords = new CartesianCoordinate(1, 0, 2);
+        barCoords = new CartesianCoordinate(-1, -2, 0);
         fooLocation = new Location(fooCoords);
         barLocation = new Location(barCoords);
     }

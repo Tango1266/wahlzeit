@@ -41,11 +41,11 @@ public class CartesianCoordinateTest extends CoordinateTest {
 
     @Before
     public void setUp() {
-        octantIa = new CartesianCoordinate(1.0, 2.0, 3.0);
-        octantIb = new CartesianCoordinate(1.0, 2.0, 3.0);
-        octantVII = new CartesianCoordinate(-1.0, -2.0, -3.0);
-        layerXYa = new CartesianCoordinate(0, 1, 0);
-        layerXYb = new CartesianCoordinate(5, 1, 0);
+        octantIa = new CartesianCoordinate(2.0, 1.0, 3.0);
+        octantIb = new CartesianCoordinate(2.0, 1.0, 3.0);
+        octantVII = new CartesianCoordinate(-2.0, -1.0, -3.0);
+        layerXYa = new CartesianCoordinate(1, 0, 0);
+        layerXYb = new CartesianCoordinate(1, 5, 0);
     }
 
     /*CreationTests*/
@@ -71,12 +71,12 @@ public class CartesianCoordinateTest extends CoordinateTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void createCoordinate_withExceedingMaxValueInX_shouldThroughException() {
-        new CartesianCoordinate(1, VALUE_EXCEEDING_COORD_MAXVALUE, 1);
+        new CartesianCoordinate(VALUE_EXCEEDING_COORD_MAXVALUE, 1, 1);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void createCoordinate_withExceedingMaxValueInY_shouldThroughIllegalArgumentException() {
-        new CartesianCoordinate(VALUE_EXCEEDING_COORD_MAXVALUE, 1, 1);
+        new CartesianCoordinate(1, VALUE_EXCEEDING_COORD_MAXVALUE, 1);
     }
 
     @Test
@@ -84,8 +84,8 @@ public class CartesianCoordinateTest extends CoordinateTest {
         Double valueBelowCoordMaxValue = Double.MAX_VALUE - 1E292;
         try {
             new CartesianCoordinate(1, 1, valueBelowCoordMaxValue);
-            new CartesianCoordinate(1, valueBelowCoordMaxValue, 1);
             new CartesianCoordinate(valueBelowCoordMaxValue, 1, 1);
+            new CartesianCoordinate(1, valueBelowCoordMaxValue, 1);
         } catch (Exception ex) {
             Assert.fail("Exception was thrown but shouldn't.");
         }
@@ -95,8 +95,8 @@ public class CartesianCoordinateTest extends CoordinateTest {
     public void createCoordinate_withCoordMaxValue_shouldNOTThroughExceptions() {
         try {
             new CartesianCoordinate(1, 1, CartesianCoordinate.MAX_VALUE);
-            new CartesianCoordinate(1, CartesianCoordinate.MAX_VALUE, 1);
             new CartesianCoordinate(CartesianCoordinate.MAX_VALUE, 1, 1);
+            new CartesianCoordinate(1, CartesianCoordinate.MAX_VALUE, 1);
         } catch (Exception ex) {
             Assert.fail("Exception was thrown but shouldn't.");
         }
@@ -111,8 +111,8 @@ public class CartesianCoordinateTest extends CoordinateTest {
     public void createCoordinate_aboveCoordMinValue_shouldNOTThroughExceptions() {
         try {
             new CartesianCoordinate(1, 1, -CartesianCoordinate.MAX_VALUE);
-            new CartesianCoordinate(1, -CartesianCoordinate.MAX_VALUE, 1);
             new CartesianCoordinate(-CartesianCoordinate.MAX_VALUE, 1, 1);
+            new CartesianCoordinate(1, -CartesianCoordinate.MAX_VALUE, 1);
         } catch (Exception ex) {
             Assert.fail("Exception was thrown but shouldn't.");
         }
@@ -226,8 +226,8 @@ public class CartesianCoordinateTest extends CoordinateTest {
 
     @Test
     public void distanceOfCoordinate_withOneCoordinateMaxAndMinOrdinate_is0() {
-        Coordinate minCoordinate = new CartesianCoordinate(CartesianCoordinate.MAX_VALUE * (-1), 0, 0);
-        Coordinate maxCoordinate = new CartesianCoordinate(CartesianCoordinate.MAX_VALUE, 0, 0);
+        Coordinate minCoordinate = new CartesianCoordinate(0, CartesianCoordinate.MAX_VALUE * (-1), 0);
+        Coordinate maxCoordinate = new CartesianCoordinate(0, CartesianCoordinate.MAX_VALUE, 0);
         double expectedDistance = CartesianCoordinate.MAX_VALUE - CartesianCoordinate.MAX_VALUE * (-1);
         Assert.assertEquals(expectedDistance, minCoordinate.getDistance(maxCoordinate), 0);
     }

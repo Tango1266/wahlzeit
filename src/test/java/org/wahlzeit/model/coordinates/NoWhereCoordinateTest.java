@@ -42,11 +42,11 @@ public class NoWhereCoordinateTest extends CoordinateTest {
     @Before
     public void initTest() {
         noWhere = new NoWhereCoordinate();
-        octantIa = new CartesianCoordinate(1.0, 2.0, 3.0);
-        octantIb = new CartesianCoordinate(1.0, 2.0, 3.0);
-        octantVII = new CartesianCoordinate(-1.0, -2.0, -3.0);
-        layerXYa = new CartesianCoordinate(0, 1, 0);
-        layerXYb = new CartesianCoordinate(5, 1, 0);
+        octantIa = new CartesianCoordinate(2.0, 1.0, 3.0);
+        octantIb = new CartesianCoordinate(2.0, 1.0, 3.0);
+        octantVII = new CartesianCoordinate(-2.0, -1.0, -3.0);
+        layerXYa = new CartesianCoordinate(1, 0, 0);
+        layerXYb = new CartesianCoordinate(1, 5, 0);
     }
 
     @Test

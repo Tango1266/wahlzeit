@@ -38,7 +38,7 @@ public class CartesianCoordinate implements Coordinate {
     public CartesianCoordinate() {
     }
 
-    public CartesianCoordinate(double y, double x, double z) {
+    public CartesianCoordinate(double x, double y, double z) {
         setY(y);
         setX(x);
         setZ(z);
