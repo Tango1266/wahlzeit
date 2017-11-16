@@ -25,11 +25,58 @@
 package org.wahlzeit.model.coordinates;
 
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.wahlzeit.model.coordinates.impl.CartesianCoordinate;
+import org.wahlzeit.model.coordinates.impl.SphericCoordinate;
 
 public class CoordinateTest {
     protected static final Double VALUE_EXCEEDING_COORD_MAXVALUE = Double.MAX_VALUE - 1E291;
 
-    protected static void CheckDistance(Coordinate first, Coordinate second, double expectedDistance, double tolerance) {
+    protected Coordinate berlinBarndBurgCartesian;
+    protected Coordinate lissabonBrueckeCartesian;
+    protected Coordinate berlinBarndBurgSpheric;
+    protected Coordinate lissabonBrueckeSpheric;
+
+    @Before
+    public void setUpTest() {
+        berlinBarndBurgCartesian = new CartesianCoordinate(897_997.802, 1_170_987.368, 6_204_939.366);
+        lissabonBrueckeCartesian = new CartesianCoordinate(-794_012.0811, -635_956.8219, 6_296_347.174);
+
+        berlinBarndBurgSpheric = new SphericCoordinate(52.5164, 13.3777);
+        lissabonBrueckeSpheric = new SphericCoordinate(38.692668, -9.177944);
+    }
+
+    @Test
+    public void convertingBerlinCartesian_toSphericAndBack_inIsEqualOut() {
+        Coordinate convertedToSpherich = berlinBarndBurgCartesian.asSphericCoordinate();
+        Coordinate convertedBackToCart = convertedToSpherich.asCartesianCoordinate();
+        Assert.assertEquals(berlinBarndBurgCartesian, convertedBackToCart);
+    }
+
+    @Test
+    public void convertingZeroSpheric_toCartesianAndBack_inIsEqualOut() {
+        Coordinate spheric = new SphericCoordinate(0, 0);
+        Assert.assertEquals(spheric, spheric.asCartesianCoordinate().asSphericCoordinate());
+    }
+
+    @Test
+    public void convertingZeroCartesion_toSphericAndBack_inIsEqualOut() {
+        Coordinate cartesian = new CartesianCoordinate(0, 0, 0);
+        Assert.assertEquals(cartesian, cartesian.asSphericCoordinate().asCartesianCoordinate());
+    }
+
+    @Test
+    public void creatingTwoCartesions_whereOneIsBuildFromSpheric_areEqual() {
+        Coordinate spheric = new SphericCoordinate(10, 12);
+
+        CartesianCoordinate convertedCartesian = spheric.asCartesianCoordinate();
+        Coordinate cartesian = new CartesianCoordinate(convertedCartesian.getX(), convertedCartesian.getY(), convertedCartesian.getZ());
+
+        Assert.assertEquals(spheric, (cartesian.asSphericCoordinate()));
+    }
+
+    protected static void checkDistance(Coordinate first, Coordinate second, double expectedDistance, double tolerance) {
         double distance = first.getDistance(second);
         Assert.assertEquals(expectedDistance, distance, tolerance);
     }

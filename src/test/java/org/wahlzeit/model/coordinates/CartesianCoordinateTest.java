@@ -31,7 +31,10 @@ import org.wahlzeit.model.coordinates.impl.CartesianCoordinate;
 
 import java.util.HashMap;
 
-public class CartesianCoordinateTest extends CoordinateTest {
+import static org.wahlzeit.model.coordinates.CoordinateTest.VALUE_EXCEEDING_COORD_MAXVALUE;
+import static org.wahlzeit.model.coordinates.CoordinateTest.checkDistance;
+
+public class CartesianCoordinateTest {
 
     CartesianCoordinate octantIa;
     CartesianCoordinate octantIb;
@@ -39,6 +42,10 @@ public class CartesianCoordinateTest extends CoordinateTest {
     CartesianCoordinate layerXYa;
     CartesianCoordinate layerXYb;
 
+    protected Coordinate berlinBarndBurgCartesian;
+    protected Coordinate lissabonBrueckeCartesian;
+
+    /*CreationTests*/
     @Before
     public void setUp() {
         octantIa = new CartesianCoordinate(2.0, 1.0, 3.0);
@@ -46,9 +53,11 @@ public class CartesianCoordinateTest extends CoordinateTest {
         octantVII = new CartesianCoordinate(-2.0, -1.0, -3.0);
         layerXYa = new CartesianCoordinate(1, 0, 0);
         layerXYb = new CartesianCoordinate(1, 5, 0);
+
+        berlinBarndBurgCartesian = new CartesianCoordinate(897_997.802, 1_170_987.368, 6_204_939.366);
+        lissabonBrueckeCartesian = new CartesianCoordinate(-794_012.0811, -635_956.8219, 6_296_347.174);
     }
 
-    /*CreationTests*/
     @Test
     public void createCoordinate_initThroughSetter_notNull() {
         CartesianCoordinate foo = new CartesianCoordinate();
@@ -117,8 +126,8 @@ public class CartesianCoordinateTest extends CoordinateTest {
             Assert.fail("Exception was thrown but shouldn't.");
         }
     }
-
     /*EqualityTests*/
+
     @Test
     public void octantIa_andB_areEqual() {
         Assert.assertEquals(octantIa, octantIb);
@@ -168,8 +177,8 @@ public class CartesianCoordinateTest extends CoordinateTest {
 
     @Test
     public void someCoordinates_withMarginalDifferentOrdinate_areNotEqual() {
-        double smallValueA = 0.0000000000000000000000000011;
-        double smallValueB = 0.0000000000000000000000000012;
+        double smallValueA = 1.0E-6;
+        double smallValueB = 1.1E-6;
         Coordinate coordinateA = new CartesianCoordinate(smallValueA, smallValueA, smallValueA);
         Coordinate coordinateB = new CartesianCoordinate(smallValueB, smallValueB, smallValueB);
         Assert.assertNotEquals(coordinateA, coordinateB);
@@ -207,21 +216,21 @@ public class CartesianCoordinateTest extends CoordinateTest {
     public void setOctantIa_andOctantVII_comparedUsingHashCode_areNotEqual() {
         Assert.assertFalse(octantIa == octantVII);
     }
-
     /*DistanceTests*/
+
     @Test
     public void distanceOfCoordinateA_andB_is0() {
-        CheckDistance(octantIa, octantIb, 0, 0);
+        checkDistance(octantIa, octantIb, 0, 0);
     }
 
     @Test
     public void distanceOfLayerXYa_andXYb_is5() {
-        CheckDistance(layerXYa, layerXYb, 5, 0);
+        checkDistance(layerXYa, layerXYb, 5, 0);
     }
 
     @Test
     public void distanceOfCoordinateB_andC_is7_5() {
-        CheckDistance(octantIb, octantVII, 7.5, 0.02);
+        checkDistance(octantIb, octantVII, 7.5, 0.02);
     }
 
     @Test
@@ -231,4 +240,22 @@ public class CartesianCoordinateTest extends CoordinateTest {
         double expectedDistance = CartesianCoordinate.MAX_VALUE - CartesianCoordinate.MAX_VALUE * (-1);
         Assert.assertEquals(expectedDistance, minCoordinate.getDistance(maxCoordinate), 0);
     }
+
+    @Test
+    public void getCartesianDistance_berlinToLissabon_returns2317722() {
+        double expected = 2317722;
+        double tolerance = expected * 0.1;
+        Assert.assertEquals(expected, berlinBarndBurgCartesian.getCartesianDistance(lissabonBrueckeCartesian), tolerance);
+        Assert.assertEquals(expected, berlinBarndBurgCartesian.getDistance(lissabonBrueckeCartesian), tolerance);
+    }
+
+    //@Test
+    public void getSphericDistance_berlinToLissabon_returns2317722() {
+        double expected = 2317722;
+        double tolerance = expected * 0.1;
+          /*TODO: Test throws Exception when Creating a Spheric Coordinate:
+          * java.lang.IllegalArgumentException: The value "-141.3073319997775" must be in the range of [-90.0:90.0]*/
+        Assert.assertEquals(expected, berlinBarndBurgCartesian.getSphericDistance(lissabonBrueckeCartesian), tolerance);
+    }
+
 }

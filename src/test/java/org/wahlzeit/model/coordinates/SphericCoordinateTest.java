@@ -36,16 +36,14 @@ public class SphericCoordinateTest extends CoordinateTest {
 
     private SphericCoordinate ruesselsheimBhf;
     private SphericCoordinate ruesselsheimOpelbruecke;
-    private SphericCoordinate berlinBrandBurgTor;
-    private SphericCoordinate lissabonTejoBruecke;
-
     final double[] RADIANS = {-1.0, 0, 0.1, 1, 123456};
     final double VALUE = 2.22;
     final double MIN_PRECISION = 0.00000001;
     final double LATITUDE_MAX = 180.00;
     final double LONGITUDE_MAX = 90.00;
-
     SphericCoordinate unsettedCoord;
+    protected Coordinate berlinBarndBurgSpheric;
+    protected Coordinate lissabonBrueckeSpheric;
 
     @Before
     public void setUp() {
@@ -55,8 +53,8 @@ public class SphericCoordinateTest extends CoordinateTest {
         ruesselsheimBhf = new SphericCoordinate(49.9917, 8.41321);
         ruesselsheimOpelbruecke = new SphericCoordinate(50.0049, 8.42182);
 
-        berlinBrandBurgTor = new SphericCoordinate(52.5164, 13.3777);
-        lissabonTejoBruecke = new SphericCoordinate(38.692668, -9.177944);
+        berlinBarndBurgSpheric = new SphericCoordinate(52.5164, 13.3777);
+        lissabonBrueckeSpheric = new SphericCoordinate(38.692668, -9.177944);
     }
 
     @Test
@@ -165,18 +163,18 @@ public class SphericCoordinateTest extends CoordinateTest {
     public void getSphericDistance_berlinToLissabon_returns2317722() {
         double expected = 2317722;
         double tolerance = expected * 0.05;
-        Assert.assertEquals(expected, berlinBrandBurgTor.getSphericDistance(lissabonTejoBruecke), tolerance);
-        Assert.assertEquals(expected, berlinBrandBurgTor.getDistance(lissabonTejoBruecke), tolerance);
+        Assert.assertEquals(expected, berlinBarndBurgSpheric.getSphericDistance(lissabonBrueckeSpheric), tolerance);
+        Assert.assertEquals(expected, berlinBarndBurgSpheric.getDistance(lissabonBrueckeSpheric), tolerance);
     }
 
     @Test
     public void isEquals_berlinAndLissabon_isFalse() {
-        Assert.assertFalse(berlinBrandBurgTor.isEqual(lissabonTejoBruecke));
+        Assert.assertFalse(berlinBarndBurgSpheric.isEqual(lissabonBrueckeSpheric));
     }
 
     @Test
     public void isEquals_berlinAndBerlin_isTrue() {
-        Assert.assertTrue(berlinBrandBurgTor.isEqual(berlinBrandBurgTor));
+        Assert.assertTrue(berlinBarndBurgSpheric.isEqual(berlinBarndBurgSpheric));
     }
 
     @Test
@@ -190,6 +188,6 @@ public class SphericCoordinateTest extends CoordinateTest {
     public void getCartesianDistance_berlinToLissabon_returns2317722() {
         double expected = 2317722;
         double tolerance = expected * 0.05;
-        Assert.assertEquals(expected, berlinBrandBurgTor.getCartesianDistance(lissabonTejoBruecke), tolerance);
+        Assert.assertEquals(expected, berlinBarndBurgSpheric.getCartesianDistance(lissabonBrueckeSpheric), tolerance);
     }
 }

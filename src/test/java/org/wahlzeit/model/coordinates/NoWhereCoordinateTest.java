@@ -30,7 +30,7 @@ import org.junit.Test;
 import org.wahlzeit.model.coordinates.impl.CartesianCoordinate;
 import org.wahlzeit.model.coordinates.impl.NoWhereCoordinate;
 
-public class NoWhereCoordinateTest extends CoordinateTest {
+public class NoWhereCoordinateTest {
 
     protected Coordinate noWhere;
     protected Coordinate octantIa;
@@ -68,14 +68,14 @@ public class NoWhereCoordinateTest extends CoordinateTest {
 
     @Test
     public void distanceOfAnyCoord_andNoWhere_isMinus1() {
-        CheckDistance(octantIa, noWhere, -1, 0);
-        CheckDistance(noWhere, octantIb, -1, 0);
+        CoordinateTest.checkDistance(octantIa, noWhere, -1, 0);
+        CoordinateTest.checkDistance(noWhere, octantIb, -1, 0);
     }
 
     @Test
     public void distanceOfAnyCoord_andNull_isMinus1() {
-        CheckDistance(octantIa, null, -1, 0);
-        CheckDistance(noWhere, null, -1, 0);
+        CoordinateTest.checkDistance(octantIa, null, -1, 0);
+        CoordinateTest.checkDistance(noWhere, null, -1, 0);
     }
 
     @Test

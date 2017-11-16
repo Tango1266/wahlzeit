@@ -25,6 +25,7 @@
 package org.wahlzeit.model.coordinates.impl;
 
 import org.wahlzeit.model.coordinates.Coordinate;
+import org.wahlzeit.utils.DoubleCompare;
 
 /**
  */
@@ -33,19 +34,23 @@ public class SphericCoordinate implements Coordinate {
     private double latitude;
     private double radius;
 
+    public static final double EARTH_RADIUS_METER = 6_378_000;
     public static final double LONGITUDE_MAX_VALUE = 90.00;
     public static final double LATITUDE_MAX_VALUE = 180.00;
     public static final double PRECISION = 1.0E-10;
-    public static final double EARTH_RADIUS_METER = 6_378_000;
-
-    public SphericCoordinate(double latitude, double longitude) {
-        setRadius(EARTH_RADIUS_METER);
-        this.longitude = longitude;
-        this.latitude = latitude;
-    }
 
     public SphericCoordinate() {
         setRadius(EARTH_RADIUS_METER);
+    }
+
+    public SphericCoordinate(double latitude, double longitude) {
+        this(latitude, longitude, EARTH_RADIUS_METER);
+    }
+
+    public SphericCoordinate(double latitude, double longitude, double radius) {
+        setLatitude(latitude);
+        setLongitude(longitude);
+        setRadius(radius);
     }
 
     public void setLongitude(double longitude) {
@@ -62,6 +67,7 @@ public class SphericCoordinate implements Coordinate {
     }
 
     public void setRadius(double radius) {
+        assertNotNegative(radius);
         this.radius = radius;
     }
 
@@ -74,14 +80,17 @@ public class SphericCoordinate implements Coordinate {
         this.latitude = latitude;
     }
 
+    /**
+     * https://de.wikipedia.org/wiki/Kugelkoordinaten section "Andere Konventionen"
+     */
     @Override
     public CartesianCoordinate asCartesianCoordinate() {
         double latitudeAsRad = Math.toRadians(getLatitude());
         double longitudeAsRad = Math.toRadians(getLongitude());
 
-        double x = getRadius() * Math.sin(latitudeAsRad) * Math.cos(longitudeAsRad);
-        double y = getRadius() * Math.sin(latitudeAsRad) * Math.sin(longitudeAsRad);
-        double z = getRadius() * Math.cos(latitudeAsRad);
+        double x = getRadius() * Math.cos(latitudeAsRad) * Math.cos(longitudeAsRad);
+        double y = getRadius() * Math.cos(latitudeAsRad) * Math.sin(longitudeAsRad);
+        double z = getRadius() * Math.sin(latitudeAsRad);
         return new CartesianCoordinate(x, y, z);
     }
 
@@ -103,6 +112,7 @@ public class SphericCoordinate implements Coordinate {
     @Override
     public double getSphericDistance(Coordinate otherCoord) {
         SphericCoordinate otherSphCoord = otherCoord.asSphericCoordinate();
+
         double latitudeAsRad = Math.toRadians(getLatitude());
         double otherLatitudeAsRad = Math.toRadians(otherSphCoord.getLatitude());
         double longitudeDiffAsRad = Math.toRadians(otherSphCoord.longitude - getLongitude());
@@ -126,13 +136,13 @@ public class SphericCoordinate implements Coordinate {
 
         SphericCoordinate otherSpherCoord = otherCoord.asSphericCoordinate();
 
-        if (Double.compare(otherSpherCoord.getLongitude(), getLongitude()) != 0) {
+        if (DoubleCompare.areNotEqual(otherSpherCoord.getLongitude(), getLongitude())) {
             return false;
         }
-        if (Double.compare(otherSpherCoord.getLatitude(), getLatitude()) != 0) {
+        if (DoubleCompare.areNotEqual(otherSpherCoord.getLatitude(), getLatitude())) {
             return false;
         }
-        return Double.compare(otherSpherCoord.getRadius(), getRadius()) == 0;
+        return DoubleCompare.areEqual(otherSpherCoord.getRadius(), getRadius());
     }
 
     @Override
@@ -153,10 +163,20 @@ public class SphericCoordinate implements Coordinate {
         return o instanceof Coordinate && isEqual((Coordinate) o);
     }
 
+    @Override
+    public String toString() {
+        return "(" + latitude + "," + longitude + "), r= " + radius + ")";
+    }
+
+    private void assertNotNegative(double radius) {
+        if (radius < 0) {
+            throw new IllegalArgumentException("The radius must be greater then 0 but was actually " + radius);
+        }
+    }
+
     private void assertValueIsInRange(double value, double maxValue) {
         if (maxValue - Math.abs(value) < -PRECISION) {
             throw new IllegalArgumentException("The value \"" + value + "\" must be in the range of [-" + maxValue + ":" + maxValue + "]");
         }
     }
-
 }

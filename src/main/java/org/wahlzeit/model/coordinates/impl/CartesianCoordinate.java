@@ -25,6 +25,7 @@
 package org.wahlzeit.model.coordinates.impl;
 
 import org.wahlzeit.model.coordinates.Coordinate;
+import org.wahlzeit.utils.DoubleCompare;
 
 /**
  * Represents a Cartesian coordinate of a three dimensional Cartesian coordinate system
@@ -60,7 +61,7 @@ public class CartesianCoordinate implements Coordinate {
      * Sets ordinate Value within the range [-Coordinate.MAX_VALUE:Coordinate.MAX_VALUE]
      */
     public void setX(double x) {
-        throwExceptionIfNotInRange(x);
+        assertValueInRange(x);
         this.x = x;
     }
 
@@ -68,7 +69,7 @@ public class CartesianCoordinate implements Coordinate {
      * Sets ordinate Value within the range [-Coordinate.MAX_VALUE:Coordinate.MAX_VALUE]
      */
     public void setY(double y) {
-        throwExceptionIfNotInRange(y);
+        assertValueInRange(y);
         this.y = y;
     }
 
@@ -76,7 +77,7 @@ public class CartesianCoordinate implements Coordinate {
      * Sets ordinate Value within the range [-Coordinate.MAX_VALUE:Coordinate.MAX_VALUE]
      */
     public void setZ(double z) {
-        throwExceptionIfNotInRange(z);
+        assertValueInRange(z);
         this.z = z;
     }
 
@@ -85,9 +86,17 @@ public class CartesianCoordinate implements Coordinate {
         return this;
     }
 
+    /**
+     * https://de.wikipedia.org/wiki/Kugelkoordinaten section "Andere Konventionen"
+     */
     @Override
     public SphericCoordinate asSphericCoordinate() {
-        return null;
+        double radius = Math.sqrt(square(x) + square(y) + square(getZ()));
+        double latitudeAsRad = radius == 0 ? 0 : Math.asin(getZ() / radius);
+        double longitudeAsRad = Math.atan2(getY(), getX());
+        double latitude = Math.toDegrees(latitudeAsRad);
+        double longitude = Math.toDegrees(longitudeAsRad);
+        return new SphericCoordinate(latitude, longitude, radius);
     }
 
     /**
@@ -113,7 +122,7 @@ public class CartesianCoordinate implements Coordinate {
 
     @Override
     public double getSphericDistance(Coordinate otherCoord) {
-        return 0;
+        return asSphericCoordinate().getDistance(otherCoord);
     }
 
     /**
@@ -129,9 +138,9 @@ public class CartesianCoordinate implements Coordinate {
         }
         CartesianCoordinate otherCartCoord = otherCoord.asCartesianCoordinate();
 
-        boolean xOrdinatesAreEqual = doublesAreEqual(getX(), otherCartCoord.getX());
-        boolean yOrdinatesAreEqual = doublesAreEqual(getY(), otherCartCoord.getY());
-        boolean zOrdinatesAreEqual = doublesAreEqual(getZ(), otherCartCoord.getZ());
+        boolean xOrdinatesAreEqual = DoubleCompare.areEqual(getX(), otherCartCoord.getX());
+        boolean yOrdinatesAreEqual = DoubleCompare.areEqual(getY(), otherCartCoord.getY());
+        boolean zOrdinatesAreEqual = DoubleCompare.areEqual(getZ(), otherCartCoord.getZ());
         return xOrdinatesAreEqual && yOrdinatesAreEqual && zOrdinatesAreEqual;
     }
 
@@ -164,18 +173,14 @@ public class CartesianCoordinate implements Coordinate {
 
     @Override
     public String toString() {
-        return "(" + x + "," + y + "," + z + "," + ")";
-    }
-
-    private boolean doublesAreEqual(double firstDouble, double secondDouble) {
-        return Double.compare(firstDouble, secondDouble) == 0;
+        return "(" + x + "," + y + "," + z + ")";
     }
 
     private double square(double value) {
         return Math.pow(value, 2);
     }
 
-    private void throwExceptionIfNotInRange(double value) {
+    private void assertValueInRange(double value) {
         if (Math.abs(value) > MAX_VALUE) {
             throw new IllegalArgumentException("The input value should be smaller than " + MAX_VALUE);
         }

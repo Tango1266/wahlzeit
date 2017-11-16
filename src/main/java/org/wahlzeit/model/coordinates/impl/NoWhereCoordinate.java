@@ -35,12 +35,12 @@ public class NoWhereCoordinate implements Coordinate {
 
     @Override
     public CartesianCoordinate asCartesianCoordinate() {
-        return null;
+        return new CartesianCoordinate(0, 0, 0);
     }
 
     @Override
     public SphericCoordinate asSphericCoordinate() {
-        return null;
+        return new SphericCoordinate(0, 0, 0);
     }
 
     /**
