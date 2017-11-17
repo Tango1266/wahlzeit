@@ -95,9 +95,10 @@ public class SphericCoordinate implements Coordinate {
         return this;
     }
 
+
     @Override
     public double getDistance(Coordinate otherCoord) {
-        return getSphericDistance(otherCoord);
+        return asCartesianCoordinate().getDistance(otherCoord);
     }
 
     @Override

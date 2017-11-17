@@ -29,16 +29,36 @@ import org.wahlzeit.model.coordinates.impl.SphericCoordinate;
 
 public interface Coordinate {
 
+    /**
+     * @return new instance of {@link CartesianCoordinate} with attributes which where interpreted from attributes of this instance
+     * @methodtype conversion
+     */
     CartesianCoordinate asCartesianCoordinate();
 
+    /**
+     * @return new instance of {@link SphericCoordinate} with attributes which where interpreted from attributes of this instance
+     * @methodtype conversion
+     */
     SphericCoordinate asSphericCoordinate();
 
+    /**
+     * {@link #getCartesianDistance(Coordinate)}
+     */
     double getDistance(Coordinate otherCoord);
 
+    /**
+     * @return direct distance between two points within the cartesian system
+     */
     double getCartesianDistance(Coordinate otherCoord);
 
+    /**
+     * @return distance between two points on a sphere surface with the default radius {@link SphericCoordinate#EARTH_RADIUS_METER}
+     */
     double getSphericDistance(Coordinate otherCoord);
 
+    /**
+     * @return TRUE, if the geographically position is equal between two {@link Coordinate} within the failure {@link org.wahlzeit.utils.MathUtils#DEFAULT_PRECISION}
+     * @methodtype boolean-query
+     */
     boolean isEqual(Coordinate otherCoord);
-
 }
