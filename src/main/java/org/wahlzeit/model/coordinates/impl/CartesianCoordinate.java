@@ -25,6 +25,7 @@
 package org.wahlzeit.model.coordinates.impl;
 
 import org.wahlzeit.model.coordinates.Coordinate;
+import org.wahlzeit.utils.Assert;
 import org.wahlzeit.utils.DoubleCompare;
 
 /**
@@ -61,7 +62,7 @@ public class CartesianCoordinate implements Coordinate {
      * Sets ordinate Value within the range [-Coordinate.MAX_VALUE:Coordinate.MAX_VALUE]
      */
     public void setX(double x) {
-        assertValueInRange(x);
+        Assert.inRangeMax(x, MAX_VALUE);
         this.x = x;
     }
 
@@ -69,7 +70,7 @@ public class CartesianCoordinate implements Coordinate {
      * Sets ordinate Value within the range [-Coordinate.MAX_VALUE:Coordinate.MAX_VALUE]
      */
     public void setY(double y) {
-        assertValueInRange(y);
+        Assert.inRangeMax(y, MAX_VALUE);
         this.y = y;
     }
 
@@ -77,7 +78,7 @@ public class CartesianCoordinate implements Coordinate {
      * Sets ordinate Value within the range [-Coordinate.MAX_VALUE:Coordinate.MAX_VALUE]
      */
     public void setZ(double z) {
-        assertValueInRange(z);
+        Assert.inRangeMax(z, MAX_VALUE);
         this.z = z;
     }
 
@@ -180,9 +181,4 @@ public class CartesianCoordinate implements Coordinate {
         return Math.pow(value, 2);
     }
 
-    private void assertValueInRange(double value) {
-        if (Math.abs(value) > MAX_VALUE) {
-            throw new IllegalArgumentException("The input value should be smaller than " + MAX_VALUE);
-        }
-    }
 }

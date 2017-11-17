@@ -25,6 +25,7 @@
 package org.wahlzeit.model.coordinates.impl;
 
 import org.wahlzeit.model.coordinates.Coordinate;
+import org.wahlzeit.utils.Assert;
 import org.wahlzeit.utils.DoubleCompare;
 
 /**
@@ -54,7 +55,7 @@ public class SphericCoordinate implements Coordinate {
     }
 
     public void setLongitude(double longitude) {
-        assertValueIsInRange(longitude, LONGITUDE_MAX_VALUE);
+        Assert.inRangeMax(longitude, LONGITUDE_MAX_VALUE);
         this.longitude = longitude;
     }
 
@@ -67,7 +68,7 @@ public class SphericCoordinate implements Coordinate {
     }
 
     public void setRadius(double radius) {
-        assertNotNegative(radius);
+        Assert.notNegative(radius);
         this.radius = radius;
     }
 
@@ -76,7 +77,7 @@ public class SphericCoordinate implements Coordinate {
     }
 
     public void setLatitude(double latitude) {
-        assertValueIsInRange(latitude, LATITUDE_MAX_VALUE);
+        Assert.inRangeMax(latitude, LATITUDE_MAX_VALUE);
         this.latitude = latitude;
     }
 
@@ -166,17 +167,5 @@ public class SphericCoordinate implements Coordinate {
     @Override
     public String toString() {
         return "(" + latitude + "," + longitude + "), r= " + radius + ")";
-    }
-
-    private void assertNotNegative(double radius) {
-        if (radius < 0) {
-            throw new IllegalArgumentException("The radius must be greater then 0 but was actually " + radius);
-        }
-    }
-
-    private void assertValueIsInRange(double value, double maxValue) {
-        if (maxValue - Math.abs(value) < -PRECISION) {
-            throw new IllegalArgumentException("The value \"" + value + "\" must be in the range of [-" + maxValue + ":" + maxValue + "]");
-        }
     }
 }
