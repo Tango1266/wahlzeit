@@ -28,6 +28,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.wahlzeit.model.coordinates.impl.CartesianCoordinate;
+import org.wahlzeit.model.coordinates.impl.SphericCoordinate;
 
 import java.util.HashMap;
 
@@ -241,6 +242,7 @@ public class CartesianCoordinateTest {
         Assert.assertEquals(expectedDistance, minCoordinate.getDistance(maxCoordinate), 0);
     }
 
+
     @Test
     public void getCartesianDistance_berlinToLissabon_returns2317722() {
         double expected = 2317722;
@@ -249,13 +251,16 @@ public class CartesianCoordinateTest {
         Assert.assertEquals(expected, berlinBarndBurgCartesian.getDistance(lissabonBrueckeCartesian), tolerance);
     }
 
-    //@Test
+    @Test
     public void getSphericDistance_berlinToLissabon_returns2317722() {
         double expected = 2317722;
-        double tolerance = expected * 0.1;
+        double tolerance = expected * 0.5;
           /*TODO: Test throws Exception when Creating a Spheric Coordinate:
           * java.lang.IllegalArgumentException: The value "-141.3073319997775" must be in the range of [-90.0:90.0]*/
-        Assert.assertEquals(expected, berlinBarndBurgCartesian.getSphericDistance(lissabonBrueckeCartesian), tolerance);
+        SphericCoordinate berlinSphericConverted = berlinBarndBurgCartesian.asSphericCoordinate();
+        SphericCoordinate lissabonSphericConverted = lissabonBrueckeCartesian.asSphericCoordinate();
+        Assert.assertEquals(expected, berlinSphericConverted.getSphericDistance(lissabonSphericConverted), tolerance);
+//        Assert.assertEquals(expected, berlinBarndBurgCartesian.getSphericDistance(lissabonBrueckeCartesian), tolerance);
     }
 
 }

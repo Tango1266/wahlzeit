@@ -55,7 +55,7 @@ public class SphericCoordinate implements Coordinate {
     }
 
     public void setLongitude(double longitude) {
-        Assert.inRangeMax(longitude, LONGITUDE_MAX_VALUE);
+        Assert.inRangeMax(longitude, LONGITUDE_MAX_VALUE, "Longitude");
         this.longitude = longitude;
     }
 
@@ -86,13 +86,8 @@ public class SphericCoordinate implements Coordinate {
      */
     @Override
     public CartesianCoordinate asCartesianCoordinate() {
-        double latitudeAsRad = Math.toRadians(getLatitude());
-        double longitudeAsRad = Math.toRadians(getLongitude());
-
-        double x = getRadius() * Math.cos(latitudeAsRad) * Math.cos(longitudeAsRad);
-        double y = getRadius() * Math.cos(latitudeAsRad) * Math.sin(longitudeAsRad);
-        double z = getRadius() * Math.sin(latitudeAsRad);
-        return new CartesianCoordinate(x, y, z);
+        double[] cartesianOrdinates = MathUtils.toCartesianOrdinates(getLatitude(), getLongitude(), getRadius());
+        return new CartesianCoordinate(cartesianOrdinates[0], cartesianOrdinates[1], cartesianOrdinates[2]);
     }
 
     @Override

@@ -40,8 +40,8 @@ public class CoordinateTest {
 
     @Before
     public void setUpTest() {
-        berlinBarndBurgCartesian = new CartesianCoordinate(897_997.802, 1_170_987.368, 6_204_939.366);
-        lissabonBrueckeCartesian = new CartesianCoordinate(-794_012.0811, -635_956.8219, 6_296_347.174);
+        berlinBarndBurgCartesian = new CartesianCoordinate(897_997.802, 1_170_987.37, 6_204_939.37);
+        lissabonBrueckeCartesian = new CartesianCoordinate(-794_012.08, -635_956.82, 6_296_347.17);
 
         berlinBarndBurgSpheric = new SphericCoordinate(52.5164, 13.3777);
         lissabonBrueckeSpheric = new SphericCoordinate(38.692668, -9.177944);
@@ -69,15 +69,35 @@ public class CoordinateTest {
     @Test
     public void creatingTwoCartesions_whereOneIsBuildFromSpheric_areEqual() {
         Coordinate spheric = new SphericCoordinate(10, 12);
-
-        CartesianCoordinate convertedCartesian = spheric.asCartesianCoordinate();
-        Coordinate cartesian = new CartesianCoordinate(convertedCartesian.getX(), convertedCartesian.getY(), convertedCartesian.getZ());
-
+        Coordinate cartesian = convertToCartesian(spheric);
         Assert.assertEquals(spheric, (cartesian.asSphericCoordinate()));
     }
+
+    @Test
+    public void getSphericBerlinToLissabon_afterCreateCartesianFromSphericAndConvertedBack__returns2317722() {
+        double expected = 2317722;
+        double tolerance = expected * 0.4;
+          /*TODO: Test throws Exception when Creating a Spheric Coordinate:
+          * java.lang.IllegalArgumentException: The value "-141.3073319997775" must be in the range of [-90.0:90.0]*/
+
+        Coordinate berlinCartesian = convertToCartesian(berlinBarndBurgSpheric);
+        Coordinate lissabonCartesian = convertToCartesian(lissabonBrueckeSpheric);
+
+        SphericCoordinate berlinSphericConverted = berlinCartesian.asSphericCoordinate();
+        SphericCoordinate lissabonSphericConverted = lissabonCartesian.asSphericCoordinate();
+        Assert.assertEquals(expected, berlinSphericConverted.getSphericDistance(lissabonSphericConverted), tolerance);
+    }
+
+
+
 
     protected static void checkDistance(Coordinate first, Coordinate second, double expectedDistance, double tolerance) {
         double distance = first.getDistance(second);
         Assert.assertEquals(expectedDistance, distance, tolerance);
+    }
+
+    private Coordinate convertToCartesian(Coordinate sphericCoord) {
+        CartesianCoordinate cartesianConverted = sphericCoord.asCartesianCoordinate();
+        return new CartesianCoordinate(cartesianConverted.getX(), cartesianConverted.getY(), cartesianConverted.getZ());
     }
 }

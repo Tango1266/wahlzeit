@@ -42,8 +42,17 @@ public class Assert {
      * @methodtype assert
      */
     public static void inRangeMax(double value, double maxValue) {
+        inRangeMax(value, maxValue, "");
+    }
+
+    public static void inRangeMax(double value, double maxValue, String valueSpecification) {
         if (maxValue - Math.abs(value) < -SphericCoordinate.PRECISION) {
-            throw new IllegalArgumentException("The value \"" + value + "\" must be in the range of [-" + maxValue + ":" + maxValue + "]");
+            String errorMessage = "";
+            if (valueSpecification.length() > 0) {
+                errorMessage = String.format(valueSpecification + " exceeded the defined range. ");
+            }
+            errorMessage = String.format(errorMessage + "The value was \"" + value + "\" but must be in the range of [-" + maxValue + ":" + maxValue + "]");
+            throw new IllegalArgumentException(errorMessage);
         }
     }
 }

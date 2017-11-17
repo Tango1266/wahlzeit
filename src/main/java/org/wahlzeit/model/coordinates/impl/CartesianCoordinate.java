@@ -28,6 +28,9 @@ import org.wahlzeit.model.coordinates.Coordinate;
 import org.wahlzeit.utils.Assert;
 import org.wahlzeit.utils.MathUtils;
 
+import static org.wahlzeit.utils.MathUtils.doublesAreEqual;
+import static org.wahlzeit.utils.MathUtils.square;
+
 /**
  * Represents a Cartesian coordinate of a three dimensional Cartesian coordinate system
  */
@@ -92,12 +95,8 @@ public class CartesianCoordinate implements Coordinate {
      */
     @Override
     public SphericCoordinate asSphericCoordinate() {
-        double radius = Math.sqrt(square(x) + square(y) + square(getZ()));
-        double latitudeAsRad = radius == 0 ? 0 : Math.asin(getZ() / radius);
-        double longitudeAsRad = Math.atan2(getY(), getX());
-        double latitude = Math.toDegrees(latitudeAsRad);
-        double longitude = Math.toDegrees(longitudeAsRad);
-        return new SphericCoordinate(latitude, longitude, radius);
+        double[] sphericOrdinates = MathUtils.toSphericalOrdinates(getX(), getY(), getZ());
+        return new SphericCoordinate(sphericOrdinates[0], sphericOrdinates[1], sphericOrdinates[2]);
     }
 
     /**
@@ -139,9 +138,9 @@ public class CartesianCoordinate implements Coordinate {
         }
         CartesianCoordinate otherCartCoord = otherCoord.asCartesianCoordinate();
 
-        boolean xOrdinatesAreEqual = MathUtils.doublesAreEqual(getX(), otherCartCoord.getX());
-        boolean yOrdinatesAreEqual = MathUtils.doublesAreEqual(getY(), otherCartCoord.getY());
-        boolean zOrdinatesAreEqual = MathUtils.doublesAreEqual(getZ(), otherCartCoord.getZ());
+        boolean xOrdinatesAreEqual = doublesAreEqual(getX(), otherCartCoord.getX());
+        boolean yOrdinatesAreEqual = doublesAreEqual(getY(), otherCartCoord.getY());
+        boolean zOrdinatesAreEqual = doublesAreEqual(getZ(), otherCartCoord.getZ());
         return xOrdinatesAreEqual && yOrdinatesAreEqual && zOrdinatesAreEqual;
     }
 
@@ -175,10 +174,6 @@ public class CartesianCoordinate implements Coordinate {
     @Override
     public String toString() {
         return "(" + x + "," + y + "," + z + ")";
-    }
-
-    private double square(double value) {
-        return Math.pow(value, 2);
     }
 
 }
