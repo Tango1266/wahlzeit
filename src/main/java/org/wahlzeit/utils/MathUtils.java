@@ -1,9 +1,9 @@
 /*
  *  Copyright
  *
- *  Classname: DoubleUtils
+ *  Classname: MathUtils
  *  Author: Tango1266
- *  Version: 16.11.17 23:37
+ *  Version: 17.11.17 14:31
  *
  *  This file is part of the Wahlzeit photo rating application.
  *
@@ -26,33 +26,26 @@ package org.wahlzeit.utils;
 
 import com.google.common.math.DoubleMath;
 
-public class DoubleCompare {
-    private static final double DEFAULT_DELTA = 1.0E-8;
-    private static double delta = DEFAULT_DELTA;
+public class MathUtils {
+    static final double DEFAULT_PRECISION = 1.0E-8;
+    private static double precision = DEFAULT_PRECISION;
 
-    public DoubleCompare() {
+    public static boolean doublesAreNotEqual(double valuaA, double valueB) {
+        return !doublesAreEqual(valuaA, valueB);
     }
 
-    public DoubleCompare(double delta) {
-        delta = DEFAULT_DELTA;
+    public static boolean doublesAreEqual(double valuaA, double valueB) {
+        return DoubleMath.fuzzyEquals(valuaA, valueB, getPrecision());
     }
 
     /**
-     * if not other defined it will compare two doubles with a default precision of 1.0E-10
+     * @return if not other defined, the default precision of 1.0E-10 will be returned
      */
-    public static boolean areEqual(double valuaA, double valueB) {
-        return DoubleMath.fuzzyEquals(valuaA, valueB, delta);
+    public static double getPrecision() {
+        return precision;
     }
 
-    public static boolean areNotEqual(double valuaA, double valueB) {
-        return !areEqual(valuaA, valueB);
-    }
-
-    public static double getDelta() {
-        return delta;
-    }
-
-    public static void setDelta(double desiredDelta) {
-        delta = desiredDelta;
+    public static void setPrecision(double desiredDelta) {
+        precision = desiredDelta;
     }
 }

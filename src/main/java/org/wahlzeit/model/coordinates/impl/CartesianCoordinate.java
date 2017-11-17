@@ -26,7 +26,7 @@ package org.wahlzeit.model.coordinates.impl;
 
 import org.wahlzeit.model.coordinates.Coordinate;
 import org.wahlzeit.utils.Assert;
-import org.wahlzeit.utils.DoubleCompare;
+import org.wahlzeit.utils.MathUtils;
 
 /**
  * Represents a Cartesian coordinate of a three dimensional Cartesian coordinate system
@@ -139,9 +139,9 @@ public class CartesianCoordinate implements Coordinate {
         }
         CartesianCoordinate otherCartCoord = otherCoord.asCartesianCoordinate();
 
-        boolean xOrdinatesAreEqual = DoubleCompare.areEqual(getX(), otherCartCoord.getX());
-        boolean yOrdinatesAreEqual = DoubleCompare.areEqual(getY(), otherCartCoord.getY());
-        boolean zOrdinatesAreEqual = DoubleCompare.areEqual(getZ(), otherCartCoord.getZ());
+        boolean xOrdinatesAreEqual = MathUtils.doublesAreEqual(getX(), otherCartCoord.getX());
+        boolean yOrdinatesAreEqual = MathUtils.doublesAreEqual(getY(), otherCartCoord.getY());
+        boolean zOrdinatesAreEqual = MathUtils.doublesAreEqual(getZ(), otherCartCoord.getZ());
         return xOrdinatesAreEqual && yOrdinatesAreEqual && zOrdinatesAreEqual;
     }
 

@@ -26,7 +26,7 @@ package org.wahlzeit.model.coordinates.impl;
 
 import org.wahlzeit.model.coordinates.Coordinate;
 import org.wahlzeit.utils.Assert;
-import org.wahlzeit.utils.DoubleCompare;
+import org.wahlzeit.utils.MathUtils;
 
 /**
  */
@@ -137,13 +137,13 @@ public class SphericCoordinate implements Coordinate {
 
         SphericCoordinate otherSpherCoord = otherCoord.asSphericCoordinate();
 
-        if (DoubleCompare.areNotEqual(otherSpherCoord.getLongitude(), getLongitude())) {
+        if (MathUtils.doublesAreNotEqual(otherSpherCoord.getLongitude(), getLongitude())) {
             return false;
         }
-        if (DoubleCompare.areNotEqual(otherSpherCoord.getLatitude(), getLatitude())) {
+        if (MathUtils.doublesAreNotEqual(otherSpherCoord.getLatitude(), getLatitude())) {
             return false;
         }
-        return DoubleCompare.areEqual(otherSpherCoord.getRadius(), getRadius());
+        return MathUtils.doublesAreEqual(otherSpherCoord.getRadius(), getRadius());
     }
 
     @Override
