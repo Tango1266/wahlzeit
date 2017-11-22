@@ -25,6 +25,7 @@
 package org.wahlzeit.model;
 
 import org.wahlzeit.services.LogBuilder;
+import org.wahlzeit.utils.Assert;
 
 import java.util.logging.Logger;
 
@@ -37,7 +38,7 @@ public class PhotoFactory {
      * Hidden singleton instance; needs to be initialized from the outside.
      */
     private static PhotoFactory instance = null;
-    private static final Logger log = Logger.getLogger(PhotoFactory.class.getName());
+    private static final Logger log = Logger.getLogger(getInstance().getClass().getName());
 
     /**
      *
@@ -58,7 +59,6 @@ public class PhotoFactory {
      */
     public static synchronized PhotoFactory getInstance() {
         if (instance == null) {
-            getLogger().config(LogBuilder.createSystemMessage().addAction("setting generic GurkenPhotoFactory").toString());
             setInstance(new PhotoFactory());
         }
 
@@ -109,18 +109,12 @@ public class PhotoFactory {
         return new PhotoTagCollector();
     }
 
-    protected static Logger getLogger() {
-        return log;
-    }
-
     /**
      * Method to set the singleton instance of GurkenPhotoFactory.
      */
-    protected static synchronized void setInstance(PhotoFactory photoFactory) {
-        if (instance != null) {
-            throw new IllegalStateException("attempt to initalize GurkenPhotoFactory twice");
-        }
-
+    public static synchronized void setInstance(PhotoFactory photoFactory) {
+        Assert.isNull(instance, "PhotoFactory");
+        log.config(LogBuilder.createSystemMessage().addAction("setting generic GurkenPhotoFactory").toString());
         instance = photoFactory;
     }
 

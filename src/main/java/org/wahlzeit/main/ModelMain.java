@@ -24,12 +24,8 @@
 
 package org.wahlzeit.main;
 
-import org.wahlzeit.model.GlobalsManager;
-import org.wahlzeit.model.PhotoCaseManager;
-import org.wahlzeit.model.User;
-import org.wahlzeit.model.UserManager;
-import org.wahlzeit.model.gurkenDomain.GurkenPhotoFactory;
-import org.wahlzeit.model.gurkenDomain.GurkenPhotoManager;
+import org.wahlzeit.model.*;
+import org.wahlzeit.model.config.DomainCfg;
 import org.wahlzeit.model.persistence.DatastoreAdapter;
 import org.wahlzeit.model.persistence.ImageStorage;
 import org.wahlzeit.services.LogBuilder;
@@ -49,36 +45,11 @@ public abstract class ModelMain extends AbstractMain {
     /**
      *
      */
-    @Override
-    protected void startUp(String rootDir) throws Exception {
-        super.startUp(rootDir);
-        log.info("AbstractMain.startUp completed");
-
-        log.config(LogBuilder.createSystemMessage().addAction("load image storage").toString());
-        //GcsAdapter.Builder gcsAdapterBuilder = new GcsAdapter.Builder();
-        ImageStorage.setInstance(new DatastoreAdapter());
-
-        log.config(LogBuilder.createSystemMessage().addAction("load globals").toString());
-        GlobalsManager.getInstance().loadGlobals();
-
-        log.config(LogBuilder.createSystemMessage().addAction("load user").toString());
-        UserManager.getInstance().init();
-
-        log.config(LogBuilder.createSystemMessage().addAction("init GurkenPhotoFactory").toString());
-        GurkenPhotoFactory.initialize();
-
-        log.config(LogBuilder.createSystemMessage().addAction("load Photos").toString());
-        GurkenPhotoManager.getInstance().init();
-    }
-
-    /**
-     *
-     */
-    @Override
-    protected void shutDown() throws Exception {
-        saveAll();
-
-        super.shutDown();
+    public void saveAll() throws IOException {
+        PhotoCaseManager.getInstance().savePhotoCases();
+        PhotoManager.getInstance().savePhotos();
+        UserManager.getInstance().saveClients();
+        GlobalsManager.getInstance().saveGlobals();
     }
 
     /**
@@ -88,7 +59,7 @@ public abstract class ModelMain extends AbstractMain {
         UserManager userManager = UserManager.getInstance();
         new User(userId, nickName, emailAddress);
 
-        GurkenPhotoManager gurkenPhotoManager = GurkenPhotoManager.getInstance();
+        PhotoManager gurkenPhotoManager = PhotoManager.getInstance();
         File photoDirFile = new File(photoDir);
         FileFilter photoFileFilter = new FileFilter() {
             @Override
@@ -109,10 +80,31 @@ public abstract class ModelMain extends AbstractMain {
     /**
      *
      */
-    public void saveAll() throws IOException {
-        PhotoCaseManager.getInstance().savePhotoCases();
-        GurkenPhotoManager.getInstance().savePhotos();
-        UserManager.getInstance().saveClients();
-        GlobalsManager.getInstance().saveGlobals();
+    @Override
+    protected void startUp(String rootDir) throws Exception {
+        super.startUp(rootDir);
+        log.info("AbstractMain.startUp completed");
+
+        log.config(LogBuilder.createSystemMessage().addAction("load image storage").toString());
+        //GcsAdapter.Builder gcsAdapterBuilder = new GcsAdapter.Builder();
+        ImageStorage.setInstance(new DatastoreAdapter());
+
+        log.config(LogBuilder.createSystemMessage().addAction("load globals").toString());
+        GlobalsManager.getInstance().loadGlobals();
+
+        log.config(LogBuilder.createSystemMessage().addAction("load user").toString());
+        UserManager.getInstance().init();
+
+        DomainCfg.initializePhotoDomainModel();
+    }
+
+    /**
+     *
+     */
+    @Override
+    protected void shutDown() throws Exception {
+        saveAll();
+
+        super.shutDown();
     }
 }

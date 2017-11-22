@@ -28,10 +28,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.wahlzeit.model.Location;
-import org.wahlzeit.model.Photo;
-import org.wahlzeit.model.PhotoId;
-import org.wahlzeit.model.PhotoManager;
+import org.wahlzeit.model.*;
 import org.wahlzeit.model.coordinates.impl.NoWhereCoordinate;
 
 import java.io.IOException;
@@ -43,7 +40,7 @@ public class GurkenPhotoManagerTest extends GurkenDomainTest {
 
     final String TYPE = "cucumber";
 
-    GurkenPhotoManager gurkenPhotoManager;
+    PhotoManager gurkenPhotoManager;
     GurkenPhotoFactory gurkenPhotoFactory;
 
     Location noWhere;
@@ -144,8 +141,8 @@ public class GurkenPhotoManagerTest extends GurkenDomainTest {
     }
 
     private void setUpFields() {
-        gurkenPhotoManager = GurkenPhotoManager.getInstance();
-        gurkenPhotoFactory = GurkenPhotoFactory.getInstance();
+        gurkenPhotoManager = PhotoManager.getInstance();
+        gurkenPhotoFactory = PhotoFactory.getInstance();
 
         noWhere = new Location(new NoWhereCoordinate());
         oneID = PhotoId.getNextId();

@@ -42,7 +42,7 @@ public class GurkenPhotoFactoryTest extends GurkenDomainTest {
     @Before
 
     public void setUp() {
-        gurkenPhotoFactory = GurkenPhotoFactory.getInstance();
+        gurkenPhotoFactory = PhotoFactory.getInstance();
         photoID_one = PhotoId.getNextId();
 
     }

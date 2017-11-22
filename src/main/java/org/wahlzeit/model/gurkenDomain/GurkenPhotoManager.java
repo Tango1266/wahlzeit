@@ -28,74 +28,17 @@ import org.wahlzeit.model.Photo;
 import org.wahlzeit.model.PhotoId;
 import org.wahlzeit.model.PhotoManager;
 
-import java.util.logging.Logger;
-
 /**
  * A photo manager provides access to and manages GurkenPhotos.
  */
 public class GurkenPhotoManager extends PhotoManager {
 
-    private static final Logger log = Logger.getLogger(GurkenPhotoManager.class.getName());
-    /**
-     *
-     */
-    protected static final GurkenPhotoManager instance = new GurkenPhotoManager();
-
-    /**
-     *
-     */
-    public GurkenPhotoManager() {
-        photoTagCollector = GurkenPhotoFactory.getInstance().createPhotoTagCollector();
-    }
-
-    @Override
-    protected Logger getLogger() {
-        return log;
-    }
-
-    /**
-     *
-     */
-    @Override
-    public final Photo getPhoto(PhotoId id) {
-        return getInstance().getPhotoFromId(id);
-    }
-
-    /**
-     *
-     */
-    @Override
-    public Photo getPhotoFromId(PhotoId id) {
-        if (id == null) {
-            return null;
-        }
-
-        Photo result = doGetPhotoFromId(id);
-
-        if (result == null) {
-            result = GurkenPhotoFactory.getInstance().loadPhoto(id);
-            if (result != null) {
-                doAddPhoto(result);
-            }
-        }
-
-        return result;
-    }
-
     public final GurkenPhoto getGurkenPhoto(PhotoId id) {
-        return getInstance().getGurkenPhotoFromId(id);
+        return getGurkenPhotoFromId(id);
     }
 
     public GurkenPhoto getGurkenPhotoFromId(PhotoId id) {
         Photo gurkenPhoto = getInstance().getPhoto(id);
-
         return gurkenPhoto instanceof GurkenPhoto ? (GurkenPhoto) gurkenPhoto : null;
-    }
-
-    /**
-     *
-     */
-    public static final GurkenPhotoManager getInstance() {
-        return instance;
     }
 }

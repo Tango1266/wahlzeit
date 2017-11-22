@@ -25,7 +25,6 @@
 package org.wahlzeit.handlers;
 
 import org.wahlzeit.model.*;
-import org.wahlzeit.model.gurkenDomain.GurkenPhotoManager;
 import org.wahlzeit.services.Language;
 import org.wahlzeit.services.LogBuilder;
 import org.wahlzeit.services.SysConfig;
@@ -53,6 +52,13 @@ public abstract class AbstractWebPartHandler implements WebPartHandler {
      *
      */
     protected AccessRights neededRights;
+
+    /**
+     *
+     */
+    public final AccessRights getNeededRights() {
+        return neededRights;
+    }
 
     /**
      *
@@ -143,7 +149,7 @@ public abstract class AbstractWebPartHandler implements WebPartHandler {
      */
     protected boolean isSavedPhotoVisible(UserSession us) {
         String id = us.getAsString(us.getSavedArgs(), Photo.ID);
-        Photo photo = GurkenPhotoManager.getInstance().getPhoto(id);
+        Photo photo = PhotoManager.getInstance().getPhoto(id);
         return photo.isVisible();
     }
 
@@ -263,13 +269,6 @@ public abstract class AbstractWebPartHandler implements WebPartHandler {
             log.warning(LogBuilder.createSystemMessage().addException("Handle get failed", t).toString());
             return getInternalProcessingErrorPage(us);
         }
-    }
-
-    /**
-     *
-     */
-    public final AccessRights getNeededRights() {
-        return neededRights;
     }
 
 }

@@ -25,7 +25,6 @@
 package org.wahlzeit.handlers;
 
 import org.wahlzeit.model.*;
-import org.wahlzeit.model.gurkenDomain.GurkenPhotoManager;
 import org.wahlzeit.utils.HtmlUtil;
 import org.wahlzeit.webparts.WebPart;
 import org.wahlzeit.webparts.Writable;
@@ -48,15 +47,122 @@ public class ShowPhotoPageHandler extends AbstractWebPageHandler implements WebF
     /**
      *
      */
+    protected void makeLeftSidebar(UserSession us, WebPart page) {
+        WritableList parts = new WritableList();
+
+        Client client = us.getClient();
+        Photo lastPraisedPhoto = client.getLastPraisedPhoto();
+        if (lastPraisedPhoto != null) {
+            parts.append(makePriorPhotoInfo(us, lastPraisedPhoto));
+        } else {
+            parts.append(createWebPart(us, PartUtil.BLURP_INFO_FILE));
+        }
+
+        WebFormHandler handler = getFormHandler(PartUtil.FILTER_PHOTOS_FORM_NAME);
+        Writable filterPhotos = handler.makeWebPart(us);
+        parts.append(filterPhotos);
+
+        parts.append(createWebPart(us, PartUtil.LINKS_INFO_FILE));
+
+        page.addWritable("sidebar", parts);
+    }
+
+    /**
+     *
+     */
+    protected void makePhoto(UserSession us, WebPart page) {
+        Client client = us.getClient();
+        PhotoSize pagePhotoSize = client.getPhotoSize();
+
+        PhotoId photoId = us.getPhotoId();
+        Photo photo = PhotoManager.getInstance().getPhoto(photoId);
+
+        if (photo == null) {
+            page.addString("mainWidth", String.valueOf(pagePhotoSize.getMaxPhotoWidth()));
+            WebPart done = createWebPart(us, PartUtil.DONE_INFO_FILE);
+            page.addWritable(Photo.IMAGE, done);
+            return;
+        }
+
+        if (!photo.isVisible() && !client.hasModeratorRights() && !us.isPhotoOwner(photo)) {
+            page.addString("mainWidth", String.valueOf(pagePhotoSize.getMaxPhotoWidth()));
+            WebPart done = createWebPart(us, PartUtil.HIDDEN_INFO_FILE);
+            page.addWritable(Photo.IMAGE, done);
+            return;
+        }
+
+        PhotoSize maxPhotoSize = photo.getMaxPhotoSize();
+        PhotoSize photoSize = (maxPhotoSize.isSmaller(pagePhotoSize)) ? maxPhotoSize : pagePhotoSize;
+        String imageLink = getPhotoAsRelativeResourcePathString(photo, photoSize);
+        page.addString(Photo.IMAGE, HtmlUtil.asImg(HtmlUtil.asPath(imageLink)));
+    }
+
+    /**
+     *
+     */
+    protected void makePhotoCaption(UserSession us, WebPart page) {
+        PhotoId photoId = us.getPhotoId();
+        Photo photo = PhotoManager.getInstance().getPhoto(photoId);
+
+        WebPart caption = createWebPart(us, PartUtil.CAPTION_INFO_FILE);
+        caption.addString(Photo.CAPTION, getPhotoCaption(us, photo));
+        page.addWritable(Photo.CAPTION, caption);
+    }
+
+    /**
+     *
+     */
+    protected void makeEngageGuest(UserSession us, WebPart page) {
+        PhotoId photoId = us.getPhotoId();
+
+        WebPart engageGuest = createWebPart(us, PartUtil.ENGAGE_GUEST_FORM_FILE);
+        engageGuest.addString(Photo.LINK, HtmlUtil.asHref(getResourceAsRelativeHtmlPathString(photoId.asString())));
+        engageGuest.addString(Photo.ID, photoId.asString());
+
+        page.addWritable("engageGuest", engageGuest);
+    }
+
+    /**
+     *
+     */
+    protected void makeRightSidebar(UserSession us, WebPart page) {
+        String handlerName = PartUtil.NULL_FORM_NAME;
+        PhotoId photoId = us.getPhotoId();
+        Photo photo = PhotoManager.getInstance().getPhoto(photoId);
+        if (photo != null) {
+            handlerName = PartUtil.PRAISE_PHOTO_FORM_NAME;
+        }
+
+        WebFormHandler handler = getFormHandler(handlerName);
+        Writable praisePhotoForm = handler.makeWebPart(us);
+        page.addWritable("praisePhoto", praisePhotoForm);
+    }
+
+    /**
+     *
+     */
+    protected WebPart makePriorPhotoInfo(UserSession us, Photo lastPraisedPhoto) {
+        WebPart result = createWebPart(us, PartUtil.PHOTO_INFO_FILE);
+
+        result.addString(Photo.PRAISE, lastPraisedPhoto.getPraiseAsString(us.getClient().getLanguageConfiguration()));
+        result.addString(Photo.THUMB, getPhotoThumb(us, lastPraisedPhoto));
+        result.addString(Photo.CAPTION, getPhotoCaption(us, lastPraisedPhoto));
+
+        return result;
+    }
+
+    /**
+     *
+     */
     @Override
     protected String doHandleGet(UserSession us, String link, Map args) {
         Photo photo = null;
 
         if (!link.equals(PartUtil.SHOW_PHOTO_PAGE_NAME)) {
-            photo = GurkenPhotoManager.getInstance().getPhoto(link);
+            photo = PhotoManager.getInstance().getPhoto(link);
         }
 
-        GurkenPhotoManager gurkenPhotoManager = GurkenPhotoManager.getInstance();
+        PhotoManager gurkenPhotoManager = PhotoManager.getInstance();
         // check if an image has been skipped
         if (args.containsKey("prior")) {
             String skippedPhotoIdString = us.getAsString(args, "prior");
@@ -97,7 +203,7 @@ public class ShowPhotoPageHandler extends AbstractWebPageHandler implements WebF
     @Override
     protected void makeWebPageBody(UserSession us, WebPart page) {
         PhotoId photoId = us.getPhotoId();
-        Photo photo = GurkenPhotoManager.getInstance().getPhoto(photoId);
+        Photo photo = PhotoManager.getInstance().getPhoto(photoId);
 
         makeLeftSidebar(us, page);
 
@@ -120,119 +226,12 @@ public class ShowPhotoPageHandler extends AbstractWebPageHandler implements WebF
     /**
      *
      */
-    protected void makeLeftSidebar(UserSession us, WebPart page) {
-        WritableList parts = new WritableList();
-
-        Client client = us.getClient();
-        Photo lastPraisedPhoto = client.getLastPraisedPhoto();
-        if (lastPraisedPhoto != null) {
-            parts.append(makePriorPhotoInfo(us, lastPraisedPhoto));
-        } else {
-            parts.append(createWebPart(us, PartUtil.BLURP_INFO_FILE));
-        }
-
-        WebFormHandler handler = getFormHandler(PartUtil.FILTER_PHOTOS_FORM_NAME);
-        Writable filterPhotos = handler.makeWebPart(us);
-        parts.append(filterPhotos);
-
-        parts.append(createWebPart(us, PartUtil.LINKS_INFO_FILE));
-
-        page.addWritable("sidebar", parts);
-    }
-
-    /**
-     *
-     */
-    protected void makePhoto(UserSession us, WebPart page) {
-        Client client = us.getClient();
-        PhotoSize pagePhotoSize = client.getPhotoSize();
-
-        PhotoId photoId = us.getPhotoId();
-        Photo photo = GurkenPhotoManager.getInstance().getPhoto(photoId);
-
-        if (photo == null) {
-            page.addString("mainWidth", String.valueOf(pagePhotoSize.getMaxPhotoWidth()));
-            WebPart done = createWebPart(us, PartUtil.DONE_INFO_FILE);
-            page.addWritable(Photo.IMAGE, done);
-            return;
-        }
-
-        if (!photo.isVisible() && !client.hasModeratorRights() && !us.isPhotoOwner(photo)) {
-            page.addString("mainWidth", String.valueOf(pagePhotoSize.getMaxPhotoWidth()));
-            WebPart done = createWebPart(us, PartUtil.HIDDEN_INFO_FILE);
-            page.addWritable(Photo.IMAGE, done);
-            return;
-        }
-
-        PhotoSize maxPhotoSize = photo.getMaxPhotoSize();
-        PhotoSize photoSize = (maxPhotoSize.isSmaller(pagePhotoSize)) ? maxPhotoSize : pagePhotoSize;
-        String imageLink = getPhotoAsRelativeResourcePathString(photo, photoSize);
-        page.addString(Photo.IMAGE, HtmlUtil.asImg(HtmlUtil.asPath(imageLink)));
-    }
-
-    /**
-     *
-     */
-    protected void makePhotoCaption(UserSession us, WebPart page) {
-        PhotoId photoId = us.getPhotoId();
-        Photo photo = GurkenPhotoManager.getInstance().getPhoto(photoId);
-
-        WebPart caption = createWebPart(us, PartUtil.CAPTION_INFO_FILE);
-        caption.addString(Photo.CAPTION, getPhotoCaption(us, photo));
-        page.addWritable(Photo.CAPTION, caption);
-    }
-
-    /**
-     *
-     */
-    protected void makeEngageGuest(UserSession us, WebPart page) {
-        PhotoId photoId = us.getPhotoId();
-
-        WebPart engageGuest = createWebPart(us, PartUtil.ENGAGE_GUEST_FORM_FILE);
-        engageGuest.addString(Photo.LINK, HtmlUtil.asHref(getResourceAsRelativeHtmlPathString(photoId.asString())));
-        engageGuest.addString(Photo.ID, photoId.asString());
-
-        page.addWritable("engageGuest", engageGuest);
-    }
-
-    /**
-     *
-     */
-    protected void makeRightSidebar(UserSession us, WebPart page) {
-        String handlerName = PartUtil.NULL_FORM_NAME;
-        PhotoId photoId = us.getPhotoId();
-        Photo photo = GurkenPhotoManager.getInstance().getPhoto(photoId);
-        if (photo != null) {
-            handlerName = PartUtil.PRAISE_PHOTO_FORM_NAME;
-        }
-
-        WebFormHandler handler = getFormHandler(handlerName);
-        Writable praisePhotoForm = handler.makeWebPart(us);
-        page.addWritable("praisePhoto", praisePhotoForm);
-    }
-
-    /**
-     *
-     */
-    protected WebPart makePriorPhotoInfo(UserSession us, Photo lastPraisedPhoto) {
-        WebPart result = createWebPart(us, PartUtil.PHOTO_INFO_FILE);
-
-        result.addString(Photo.PRAISE, lastPraisedPhoto.getPraiseAsString(us.getClient().getLanguageConfiguration()));
-        result.addString(Photo.THUMB, getPhotoThumb(us, lastPraisedPhoto));
-        result.addString(Photo.CAPTION, getPhotoCaption(us, lastPraisedPhoto));
-
-        return result;
-    }
-
-    /**
-     *
-     */
     @Override
     public String handlePost(UserSession us, Map args) {
         String result = PartUtil.DEFAULT_PAGE_NAME;
 
         String id = us.getAndSaveAsString(args, Photo.ID);
-        Photo photo = GurkenPhotoManager.getInstance().getPhoto(id);
+        Photo photo = PhotoManager.getInstance().getPhoto(id);
         if (photo != null) {
             if (us.isFormType(args, "flagPhotoLink")) {
                 result = PartUtil.FLAG_PHOTO_PAGE_NAME;
