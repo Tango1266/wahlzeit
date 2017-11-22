@@ -32,7 +32,7 @@ import java.util.logging.Logger;
 /**
  * An Abstract Factory for creating photos and related objects.
  */
-public class PhotoFactory {
+public abstract class PhotoFactory {
 
     /**
      * Hidden singleton instance; needs to be initialized from the outside.

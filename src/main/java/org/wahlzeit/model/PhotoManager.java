@@ -41,7 +41,7 @@ import java.util.logging.Logger;
 /**
  * A photo manager provides access to and manages photos.
  */
-public class PhotoManager extends ObjectManager {
+public abstract class PhotoManager extends ObjectManager {
 
     /**
      * will be dependency injected
