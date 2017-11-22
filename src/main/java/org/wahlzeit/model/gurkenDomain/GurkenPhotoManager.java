@@ -27,12 +27,19 @@ package org.wahlzeit.model.gurkenDomain;
 import org.wahlzeit.model.Photo;
 import org.wahlzeit.model.PhotoId;
 import org.wahlzeit.model.PhotoManager;
+import org.wahlzeit.utils.Assert;
 
 /**
  * A photo manager provides access to and manages GurkenPhotos.
  */
 public class GurkenPhotoManager extends PhotoManager {
 
+    private boolean initialized;
+
+    public GurkenPhotoManager() {
+        Assert.isFalse(initialized, "GurkenPhotoManager is already initialized");
+        initialized = true;
+    }
     public final GurkenPhoto getGurkenPhoto(PhotoId id) {
         return getGurkenPhotoFromId(id);
     }
