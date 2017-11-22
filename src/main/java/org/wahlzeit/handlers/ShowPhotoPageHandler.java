@@ -25,7 +25,7 @@
 package org.wahlzeit.handlers;
 
 import org.wahlzeit.model.*;
-import org.wahlzeit.model.config.DomainCfg;
+import org.wahlzeit.model.gurkenDomain.GurkenPhotoManager;
 import org.wahlzeit.utils.HtmlUtil;
 import org.wahlzeit.webparts.WebPart;
 import org.wahlzeit.webparts.Writable;
@@ -53,10 +53,10 @@ public class ShowPhotoPageHandler extends AbstractWebPageHandler implements WebF
         Photo photo = null;
 
         if (!link.equals(PartUtil.SHOW_PHOTO_PAGE_NAME)) {
-            photo = DomainCfg.PhotoManager.getPhoto(link);
+            photo = GurkenPhotoManager.getInstance().getPhoto(link);
         }
 
-        PhotoManager photoManager = DomainCfg.PhotoManager;
+        GurkenPhotoManager gurkenPhotoManager = GurkenPhotoManager.getInstance();
         // check if an image has been skipped
         if (args.containsKey("prior")) {
             String skippedPhotoIdString = us.getAsString(args, "prior");
@@ -67,7 +67,7 @@ public class ShowPhotoPageHandler extends AbstractWebPageHandler implements WebF
 
         if (photo == null) {
             PhotoFilter filter = us.getPhotoFilter();
-            photo = photoManager.getVisiblePhoto(filter);
+            photo = gurkenPhotoManager.getVisiblePhoto(filter);
             if (photo != null) {
                 link = photo.getId().asString();
             }
@@ -97,7 +97,7 @@ public class ShowPhotoPageHandler extends AbstractWebPageHandler implements WebF
     @Override
     protected void makeWebPageBody(UserSession us, WebPart page) {
         PhotoId photoId = us.getPhotoId();
-        Photo photo = DomainCfg.PhotoManager.getPhoto(photoId);
+        Photo photo = GurkenPhotoManager.getInstance().getPhoto(photoId);
 
         makeLeftSidebar(us, page);
 
@@ -148,7 +148,7 @@ public class ShowPhotoPageHandler extends AbstractWebPageHandler implements WebF
         PhotoSize pagePhotoSize = client.getPhotoSize();
 
         PhotoId photoId = us.getPhotoId();
-        Photo photo = DomainCfg.PhotoManager.getPhoto(photoId);
+        Photo photo = GurkenPhotoManager.getInstance().getPhoto(photoId);
 
         if (photo == null) {
             page.addString("mainWidth", String.valueOf(pagePhotoSize.getMaxPhotoWidth()));
@@ -175,7 +175,7 @@ public class ShowPhotoPageHandler extends AbstractWebPageHandler implements WebF
      */
     protected void makePhotoCaption(UserSession us, WebPart page) {
         PhotoId photoId = us.getPhotoId();
-        Photo photo = DomainCfg.PhotoManager.getPhoto(photoId);
+        Photo photo = GurkenPhotoManager.getInstance().getPhoto(photoId);
 
         WebPart caption = createWebPart(us, PartUtil.CAPTION_INFO_FILE);
         caption.addString(Photo.CAPTION, getPhotoCaption(us, photo));
@@ -201,7 +201,7 @@ public class ShowPhotoPageHandler extends AbstractWebPageHandler implements WebF
     protected void makeRightSidebar(UserSession us, WebPart page) {
         String handlerName = PartUtil.NULL_FORM_NAME;
         PhotoId photoId = us.getPhotoId();
-        Photo photo = DomainCfg.PhotoManager.getPhoto(photoId);
+        Photo photo = GurkenPhotoManager.getInstance().getPhoto(photoId);
         if (photo != null) {
             handlerName = PartUtil.PRAISE_PHOTO_FORM_NAME;
         }
@@ -232,7 +232,7 @@ public class ShowPhotoPageHandler extends AbstractWebPageHandler implements WebF
         String result = PartUtil.DEFAULT_PAGE_NAME;
 
         String id = us.getAndSaveAsString(args, Photo.ID);
-        Photo photo = DomainCfg.PhotoManager.getPhoto(id);
+        Photo photo = GurkenPhotoManager.getInstance().getPhoto(id);
         if (photo != null) {
             if (us.isFormType(args, "flagPhotoLink")) {
                 result = PartUtil.FLAG_PHOTO_PAGE_NAME;

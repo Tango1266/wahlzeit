@@ -24,8 +24,12 @@
 
 package org.wahlzeit.main;
 
-import org.wahlzeit.model.*;
-import org.wahlzeit.model.config.DomainCfg;
+import org.wahlzeit.model.GlobalsManager;
+import org.wahlzeit.model.PhotoCaseManager;
+import org.wahlzeit.model.User;
+import org.wahlzeit.model.UserManager;
+import org.wahlzeit.model.gurkenDomain.GurkenPhotoFactory;
+import org.wahlzeit.model.gurkenDomain.GurkenPhotoManager;
 import org.wahlzeit.model.persistence.DatastoreAdapter;
 import org.wahlzeit.model.persistence.ImageStorage;
 import org.wahlzeit.services.LogBuilder;
@@ -60,14 +64,11 @@ public abstract class ModelMain extends AbstractMain {
         log.config(LogBuilder.createSystemMessage().addAction("load user").toString());
         UserManager.getInstance().init();
 
-        log.config(LogBuilder.createSystemMessage().addAction("init " + DomainCfg.class.getName()).toString());
-        DomainCfg.initializeDomain();
-
-        log.config(LogBuilder.createSystemMessage().addAction("init domain " + DomainCfg.PhotoFactory.getClass().getName()).toString());
-        DomainCfg.PhotoFactory.initialize();
+        log.config(LogBuilder.createSystemMessage().addAction("init GurkenPhotoFactory").toString());
+        GurkenPhotoFactory.initialize();
 
         log.config(LogBuilder.createSystemMessage().addAction("load Photos").toString());
-        DomainCfg.PhotoManager.init();
+        GurkenPhotoManager.getInstance().init();
     }
 
     /**
@@ -87,7 +88,7 @@ public abstract class ModelMain extends AbstractMain {
         UserManager userManager = UserManager.getInstance();
         new User(userId, nickName, emailAddress);
 
-        PhotoManager gurkenPhotoManager = DomainCfg.PhotoManager;
+        GurkenPhotoManager gurkenPhotoManager = GurkenPhotoManager.getInstance();
         File photoDirFile = new File(photoDir);
         FileFilter photoFileFilter = new FileFilter() {
             @Override
@@ -110,7 +111,7 @@ public abstract class ModelMain extends AbstractMain {
      */
     public void saveAll() throws IOException {
         PhotoCaseManager.getInstance().savePhotoCases();
-        DomainCfg.PhotoManager.savePhotos();
+        GurkenPhotoManager.getInstance().savePhotos();
         UserManager.getInstance().saveClients();
         GlobalsManager.getInstance().saveGlobals();
     }
