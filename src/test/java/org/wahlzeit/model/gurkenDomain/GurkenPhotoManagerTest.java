@@ -24,12 +24,11 @@
 
 package org.wahlzeit.model.gurkenDomain;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
+import org.junit.rules.TestRule;
 import org.wahlzeit.model.*;
 import org.wahlzeit.model.coordinates.impl.NoWhereCoordinate;
+import org.wahlzeit.testEnvironmentProvider.DependencyInjectionRule;
 
 import java.io.IOException;
 
@@ -54,6 +53,27 @@ public class GurkenPhotoManagerTest extends GurkenDomainTest {
     GurkenPhoto cucumberSalty120;
     GurkenPhoto cucumberTasteless100;
     GurkenPhoto cucumberTasteless120;
+    
+    @ClassRule
+    public static TestRule rule = new DependencyInjectionRule();
+
+    @Before
+    public void setUp() {
+        setUpFields();
+        prepairPhotoCache();
+    }
+
+    @After
+    public void tearDown() {
+        try {
+            gurkenPhotoManager.removePhoto(cucumberSalty100);
+            gurkenPhotoManager.removePhoto(cucumberSalty120);
+            gurkenPhotoManager.removePhoto(cucumberTasteless100);
+            gurkenPhotoManager.removePhoto(cucumberTasteless120);
+        } catch (IOException ioEx) {
+            Assert.fail("PhotoCache could not be initialized \n Stacktrace: \n" + ioEx.getStackTrace());
+        }
+    }
 
     @Test
     public void getPhoto_byOneID_shouldReturnCucumberSalty100() {
@@ -96,24 +116,6 @@ public class GurkenPhotoManagerTest extends GurkenDomainTest {
         Assert.assertTrue(gurkenPhotoManager.getPhoto(fourID) instanceof GurkenPhoto);
     }
 
-    @Before
-    public void setUp() {
-        setUpFields();
-        prepairPhotoCache();
-    }
-
-    @After
-    public void tearDown() {
-        try {
-            gurkenPhotoManager.removePhoto(cucumberSalty100);
-            gurkenPhotoManager.removePhoto(cucumberSalty120);
-            gurkenPhotoManager.removePhoto(cucumberTasteless100);
-            gurkenPhotoManager.removePhoto(cucumberTasteless120);
-        } catch (IOException ioEx) {
-            Assert.fail("PhotoCache could not be initialized \n Stacktrace: \n" + ioEx.getStackTrace());
-        }
-    }
-
     @Test
     public void removePhoto_setUpTearDownTest() {
         tearDown();
@@ -142,7 +144,7 @@ public class GurkenPhotoManagerTest extends GurkenDomainTest {
 
     private void setUpFields() {
         gurkenPhotoManager = PhotoManager.getInstance();
-        gurkenPhotoFactory = PhotoFactory.getInstance();
+        gurkenPhotoFactory = (GurkenPhotoFactory) PhotoFactory.getInstance();
 
         noWhere = new Location(new NoWhereCoordinate());
         oneID = PhotoId.getNextId();

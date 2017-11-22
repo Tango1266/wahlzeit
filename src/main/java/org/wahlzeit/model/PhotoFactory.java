@@ -37,8 +37,8 @@ public class PhotoFactory {
     /**
      * Hidden singleton instance; needs to be initialized from the outside.
      */
-    private static PhotoFactory instance = null;
-    private static final Logger log = Logger.getLogger(getInstance().getClass().getName());
+    private static PhotoFactory instance;
+    private static final Logger log = Logger.getLogger(getInstance() != null ? getInstance().getClass().getName() : PhotoFactory.class.getName());
 
     /**
      *
@@ -48,20 +48,9 @@ public class PhotoFactory {
     }
 
     /**
-     * Hidden singleton instance; needs to be initialized from the outside.
-     */
-    public static void initialize() {
-        getInstance(); // drops result due to getInstance() side-effects
-    }
-
-    /**
      * Public singleton access method.
      */
     public static synchronized PhotoFactory getInstance() {
-        if (instance == null) {
-            setInstance(new PhotoFactory());
-        }
-
         return instance;
     }
 

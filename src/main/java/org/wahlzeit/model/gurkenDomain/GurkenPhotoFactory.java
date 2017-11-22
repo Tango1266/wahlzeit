@@ -25,6 +25,7 @@
 package org.wahlzeit.model.gurkenDomain;
 
 import org.wahlzeit.model.Location;
+import org.wahlzeit.model.Photo;
 import org.wahlzeit.model.PhotoFactory;
 import org.wahlzeit.model.PhotoId;
 import org.wahlzeit.utils.Assert;
@@ -44,4 +45,21 @@ public class GurkenPhotoFactory extends PhotoFactory {
     public GurkenPhoto createGurkenPhoto(PhotoId photoId, String cucumberType, int sizeInMillimeter, Taste taste, Location location) {
         return new GurkenPhoto(photoId, cucumberType, sizeInMillimeter, taste, location);
     }
+
+    /**
+     * @methodtype factory
+     */
+    @Override
+    public Photo createPhoto() {
+        return new GurkenPhoto();
+    }
+
+    /**
+     * Creates a new photo with the specified id
+     */
+    @Override
+    public Photo createPhoto(PhotoId id) {
+        return new GurkenPhoto(id);
+    }
+
 }
