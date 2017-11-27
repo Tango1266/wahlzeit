@@ -25,9 +25,6 @@
 package org.wahlzeit.utils;
 
 public class MathUtilsTest {
-
-
-
-
+    //TODO: Add tests
 
 }

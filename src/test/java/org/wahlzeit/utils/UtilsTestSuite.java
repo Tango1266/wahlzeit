@@ -30,7 +30,8 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         StringUtilTest.class,
-        VersionTest.class
+        VersionTest.class,
+        MathUtils.class
 })
 public class UtilsTestSuite {
 }
