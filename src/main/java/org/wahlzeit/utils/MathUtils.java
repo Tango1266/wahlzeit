@@ -61,33 +61,4 @@ public class MathUtils {
         return Math.sqrt(sum);
     }
 
-    /**
-     * http://www.learningaboutelectronics.com/Articles/Cartesian-rectangular-to-spherical-coordinate-converter-calculator.php#answer
-     * @return array of doubles in format: [ x , y , z ]
-     */
-    public static double[] toCartesianOrdinates(double latitudeInDegree, double longitudeInDegree, double radius) {
-        //TODO, Add asserts
-        double longitudeRad = Math.toRadians(longitudeInDegree);
-        double latitudeRad = Math.toRadians(latitudeInDegree);
-        double x = radius * Math.sin(longitudeRad) * Math.cos(latitudeRad);
-        double y = radius * Math.sin(longitudeRad) * Math.sin(latitudeRad);
-        double z = radius * Math.cos(longitudeRad);
-
-        double[] coord = {x, y, z};
-        return coord;
-    }
-
-    /**
-     * http://www.learningaboutelectronics.com/Articles/Cartesian-rectangular-to-spherical-coordinate-converter-calculator.php#answer
-     * @return array of doubles in format: [ latitude , longitude , radius ]
-     */
-    public static double[] toSphericalOrdinates(double x, double y, double z) {
-        //TODO, Add asserts
-        double radius = sqrtOfSum(square(x), square(y), square(z));
-        double longitude = radius == 0 ? 0 : Math.toDegrees(Math.acos(z / radius));
-        double latitude = x == 0 ? 0 : Math.toDegrees(Math.atan(y / x));
-
-        double[] coord = {latitude, longitude, radius};
-        return coord;
-    }
 }

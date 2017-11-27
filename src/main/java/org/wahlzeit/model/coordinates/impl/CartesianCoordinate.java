@@ -86,6 +86,51 @@ public class CartesianCoordinate extends AbstractCoordinate {
     }
 
     /**
+     * http://www.learningaboutelectronics.com/Articles/Cartesian-rectangular-to-spherical-coordinate-converter-calculator.php#answer
+     * @return array of doubles in format: [ latitude , longitude , radius ]
+     */
+    public static double[] toSphericalOrdinates(double x, double y, double z) {
+        double radius = MathUtils.sqrtOfSum(square(x), square(y), square(z));
+        double longitude = radius == 0 ? 0 : Math.toDegrees(Math.acos(z / radius));
+        double latitude = x == 0 ? 0 : Math.toDegrees(Math.atan(y / x));
+        double[] coord = {latitude, longitude, radius};
+        return coord;
+    }
+
+    @Override
+    protected double doCalculateDistance(Coordinate otherCoord) {
+        CartesianCoordinate otherCartCoord = otherCoord.asCartesianCoordinate();
+        double xDifference = getX() - otherCartCoord.getX();
+        double yDifference = getY() - otherCartCoord.getY();
+        double zDifference = getZ() - otherCartCoord.getZ();
+        double radicand = square(xDifference) + square(yDifference) + square(zDifference);
+        return Math.sqrt(radicand);
+    }
+
+    @Override
+    protected boolean doIsEqual(Coordinate otherCoord) {
+        CartesianCoordinate otherCartCoord = otherCoord.asCartesianCoordinate();
+        boolean xOrdinatesAreEqual = doublesAreEqual(getX(), otherCartCoord.getX());
+        boolean yOrdinatesAreEqual = doublesAreEqual(getY(), otherCartCoord.getY());
+        boolean zOrdinatesAreEqual = doublesAreEqual(getZ(), otherCartCoord.getZ());
+        return xOrdinatesAreEqual && yOrdinatesAreEqual && zOrdinatesAreEqual;
+    }
+
+    @Override
+    public CartesianCoordinate asCartesianCoordinate() {
+        return this;
+    }
+
+    /**
+     * https://de.wikipedia.org/wiki/Kugelkoordinaten section "Andere Konventionen"
+     */
+    @Override
+    public SphericCoordinate asSphericCoordinate() {
+        double[] sphericOrdinates = toSphericalOrdinates(getX(), getY(), getZ());
+        return new SphericCoordinate(sphericOrdinates[0], sphericOrdinates[1], sphericOrdinates[2]);
+    }
+
+    /**
      * @return hashes calculated from all ordinates
      */
     @Override
@@ -99,57 +144,6 @@ public class CartesianCoordinate extends AbstractCoordinate {
         temp = Double.doubleToLongBits(z);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
-    }
-
-    @Override
-    public CartesianCoordinate asCartesianCoordinate() {
-        return this;
-    }
-
-    /**
-     * https://de.wikipedia.org/wiki/Kugelkoordinaten section "Andere Konventionen"
-     */
-    @Override
-    public SphericCoordinate asSphericCoordinate() {
-        double[] sphericOrdinates = MathUtils.toSphericalOrdinates(getX(), getY(), getZ());
-        return new SphericCoordinate(sphericOrdinates[0], sphericOrdinates[1], sphericOrdinates[2]);
-    }
-
-    @Override
-    public double getCartesianDistance(Coordinate otherCoord) {
-        if (otherCoord instanceof NoWhereCoordinate || otherCoord == null) {
-            return -1;
-        }
-        CartesianCoordinate otherCartCoord = otherCoord.asCartesianCoordinate();
-        double xDifference = getX() - otherCartCoord.getX();
-        double yDifference = getY() - otherCartCoord.getY();
-        double zDifference = getZ() - otherCartCoord.getZ();
-        double radicand = square(xDifference) + square(yDifference) + square(zDifference);
-        return Math.sqrt(radicand);
-    }
-
-    @Override
-    public double getSphericDistance(Coordinate otherCoord) {
-        return asSphericCoordinate().getDistance(otherCoord);
-    }
-
-    /**
-     * @return true, if all ordinates of the compared Coordinates are equal.
-     */
-    @Override
-    public boolean isEqual(Coordinate otherCoord) {
-        if (otherCoord == this) {
-            return true;
-        }
-        if (otherCoord == null) {
-            return false;
-        }
-        CartesianCoordinate otherCartCoord = otherCoord.asCartesianCoordinate();
-
-        boolean xOrdinatesAreEqual = doublesAreEqual(getX(), otherCartCoord.getX());
-        boolean yOrdinatesAreEqual = doublesAreEqual(getY(), otherCartCoord.getY());
-        boolean zOrdinatesAreEqual = doublesAreEqual(getZ(), otherCartCoord.getZ());
-        return xOrdinatesAreEqual && yOrdinatesAreEqual && zOrdinatesAreEqual;
     }
 
     @Override

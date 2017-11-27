@@ -28,6 +28,51 @@ import org.wahlzeit.model.coordinates.Coordinate;
 
 public abstract class AbstractCoordinate implements Coordinate {
 
+    /**
+     * @return distance, defined by its caller
+     */
+    protected abstract double doCalculateDistance(Coordinate otherCoord);
+
+    /**
+     * @return true, if the properties defined by its caller are equal
+     */
+    protected abstract boolean doIsEqual(Coordinate otherCoord);
+
+    /**
+     * @return -1, if otherCood is null or NoWhereCoordinate. The direct distance, otherwise.
+     */
+    @Override
+    public double getDistance(Coordinate otherCoord) {
+        return getCartesianDistance(otherCoord);
+    }
+
+    @Override
+    public double getCartesianDistance(Coordinate otherCoord) {
+        if (isNullOrNullCoordinate(otherCoord)) {
+            return -1;
+        }
+        return asCartesianCoordinate().doCalculateDistance(otherCoord);
+    }
+
+    @Override
+    public double getSphericDistance(Coordinate otherCoord) {
+        if (isNullOrNullCoordinate(otherCoord)) {
+            return -1;
+        }
+        return asSphericCoordinate().doCalculateDistance(otherCoord);
+    }
+
+    @Override
+    public boolean isEqual(Coordinate otherCoord) {
+        if (this == otherCoord) {
+            return true;
+        }
+        if (otherCoord == null) {
+            return false;
+        }
+        return doIsEqual(otherCoord);
+    }
+
     @Override
     public abstract int hashCode();
 
@@ -39,26 +84,8 @@ public abstract class AbstractCoordinate implements Coordinate {
         return o instanceof Coordinate && isEqual((Coordinate) o);
     }
 
-    @Override
-    public abstract CartesianCoordinate asCartesianCoordinate();
-
-    @Override
-    public abstract SphericCoordinate asSphericCoordinate();
-
-    /**
-     * @return -1, if otherCood is null or NoWhereCoordinate. The direct distance, otherwise.
-     */
-    @Override
-    public double getDistance(Coordinate otherCoord) {
-        return getCartesianDistance(otherCoord);
+    private boolean isNullOrNullCoordinate(Coordinate otherCoord) {
+        return otherCoord instanceof NoWhereCoordinate || otherCoord == null;
     }
 
-    @Override
-    public abstract double getCartesianDistance(Coordinate otherCoord);
-
-    @Override
-    public abstract double getSphericDistance(Coordinate otherCoord);
-
-    @Override
-    public abstract boolean isEqual(Coordinate otherCoord);
 }
