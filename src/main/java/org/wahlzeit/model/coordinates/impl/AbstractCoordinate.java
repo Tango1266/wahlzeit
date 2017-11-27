@@ -38,9 +38,6 @@ public abstract class AbstractCoordinate implements Coordinate {
      */
     protected abstract boolean doIsEqual(Coordinate otherCoord);
 
-    /**
-     * @return -1, if otherCood is null or NoWhereCoordinate. The direct distance, otherwise.
-     */
     @Override
     public double getDistance(Coordinate otherCoord) {
         return getCartesianDistance(otherCoord);
