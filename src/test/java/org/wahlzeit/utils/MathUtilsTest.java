@@ -24,7 +24,37 @@
 
 package org.wahlzeit.utils;
 
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
 public class MathUtilsTest {
+    private double valueA;
+    private double valueA2;
+    private double precision1E_7;
     //TODO: Add tests
 
+    @Before
+    public void setUp() {
+        MathUtils.setPrecision(MathUtils.DEFAULT_PRECISION);
+        valueA = 1E-7;
+        valueA2 = 2E-7;
+        precision1E_7 = 1E-7;
+    }
+
+    @Test
+    public void doublesAreNotEqual_valueA_and_A2_withDefaultPrecision_true() {
+        Assert.assertTrue(MathUtils.doublesAreNotEqual(valueA, valueA2));
+    }
+
+    @Test
+    public void doublesAreEqual_valueA_and_A2_whenPrecisionSetTo_1E_7() {
+        MathUtils.setPrecision(precision1E_7);
+        Assert.assertTrue(MathUtils.doublesAreEqual(valueA, valueA2));
+    }
+
+    @Test
+    public void doublesAreEqual_valueA_and_A2_withPrecision_1E_7() {
+        Assert.assertTrue(MathUtils.doublesAreEqual(valueA, valueA2, precision1E_7));
+    }
 }

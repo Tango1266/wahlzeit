@@ -26,7 +26,6 @@ package org.wahlzeit.model.coordinates.impl;
 
 import org.wahlzeit.model.coordinates.Coordinate;
 import org.wahlzeit.utils.Assert;
-import org.wahlzeit.utils.MathUtils;
 
 /**
  */
@@ -38,7 +37,6 @@ public class SphericCoordinate extends AbstractCoordinate {
     public static final double EARTH_RADIUS_METER = 6_378_000;
     public static final double LONGITUDE_MAX_VALUE = 90.00;
     public static final double LATITUDE_MAX_VALUE = 180.00;
-    public static final double PRECISION = 1.0E-10;
 
     public SphericCoordinate() {
         setRadius(EARTH_RADIUS_METER);
@@ -82,7 +80,7 @@ public class SphericCoordinate extends AbstractCoordinate {
     }
 
     /**
-     * http://www.learningaboutelectronics.com/Articles/Cartesian-rectangular-to-spherical-coordinate-converter-calculator.php#answer
+     * <a href=http://www.learningaboutelectronics.com/Articles/Cartesian-rectangular-to-spherical-coordinate-converter-calculator.php#answer>source</a>
      * @return array of doubles in format: [ x , y , z ]
      */
     public static double[] toCartesianOrdinates(double latitudeInDegree, double longitudeInDegree, double radius) {
@@ -92,9 +90,7 @@ public class SphericCoordinate extends AbstractCoordinate {
         double x = radius * Math.sin(longitudeRad) * Math.cos(latitudeRad);
         double y = radius * Math.sin(longitudeRad) * Math.sin(latitudeRad);
         double z = radius * Math.cos(longitudeRad);
-
-        double[] coord = {x, y, z};
-        return coord;
+        return new double[]{x, y, z};
     }
 
     @Override
@@ -113,21 +109,8 @@ public class SphericCoordinate extends AbstractCoordinate {
         return getRadius() * acosSum;
     }
 
-    @Override
-    protected boolean doIsEqual(Coordinate otherCoord) {
-        SphericCoordinate otherSpherCoord = otherCoord.asSphericCoordinate();
-
-        if (MathUtils.doublesAreNotEqual(otherSpherCoord.getLongitude(), getLongitude())) {
-            return false;
-        }
-        if (MathUtils.doublesAreNotEqual(otherSpherCoord.getLatitude(), getLatitude())) {
-            return false;
-        }
-        return MathUtils.doublesAreEqual(otherSpherCoord.getRadius(), getRadius());
-    }
-
     /**
-     * https://de.wikipedia.org/wiki/Kugelkoordinaten section "Andere Konventionen"
+     * <a href=https://de.wikipedia.org/wiki/Kugelkoordinaten section "Andere Konventionen">source</a>
      */
     @Override
     public CartesianCoordinate asCartesianCoordinate() {
@@ -138,19 +121,6 @@ public class SphericCoordinate extends AbstractCoordinate {
     @Override
     public SphericCoordinate asSphericCoordinate() {
         return this;
-    }
-
-    @Override
-    public int hashCode() {
-        int result;
-        long temp;
-        temp = Double.doubleToLongBits(getLongitude());
-        result = (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(getLatitude());
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(getRadius());
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        return result;
     }
 
     @Override

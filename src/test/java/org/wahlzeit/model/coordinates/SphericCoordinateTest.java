@@ -38,7 +38,7 @@ public class SphericCoordinateTest extends CoordinateTest {
     private SphericCoordinate ruesselsheimOpelbruecke;
     final double[] RADIANS = {-1.0, 0, 0.1, 1, 123456};
     final double VALUE = 2.22;
-    final double MIN_PRECISION = 0.00000001;
+    final double MIN_PRECISION = 0.0000001;
     final double LATITUDE_MAX = 180.00;
     final double LONGITUDE_MAX = 90.00;
     SphericCoordinate unsettedCoord;

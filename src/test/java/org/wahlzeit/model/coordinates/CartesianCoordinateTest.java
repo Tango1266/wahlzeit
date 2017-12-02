@@ -265,7 +265,7 @@ public class CartesianCoordinateTest {
     }
 
     /**
-     * http://www.learningaboutelectronics.com/Articles/Cartesian-rectangular-to-spherical-coordinate-converter-calculator.php#answer
+     * <a href=http://www.learningaboutelectronics.com/Articles/Cartesian-rectangular-to-spherical-coordinate-converter-calculator.php#answer>source</a>
      */
     @Test
     public void calculationForConvertingCart_toSphericFromInternetExample_willHaveSameResult() {

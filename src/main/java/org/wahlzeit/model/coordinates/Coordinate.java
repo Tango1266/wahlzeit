@@ -46,7 +46,7 @@ public interface Coordinate {
     SphericCoordinate asSphericCoordinate();
 
     /**
-     * {@link #getCartesianDistance(Coordinate)}
+     * @see {@link #getCartesianDistance(Coordinate)}
      */
     double getDistance(Coordinate otherCoord);
 
@@ -64,8 +64,9 @@ public interface Coordinate {
     double getSphericDistance(Coordinate otherCoord);
 
     /**
-     * @return TRUE, if the geographically position is equal between two {@link Coordinate}
-     * within the failure {@link org.wahlzeit.utils.MathUtils#DEFAULT_PRECISION}
+     * @return TRUE, if the cartesian distance between two {@link Coordinate}
+     * is equal within the failure {@link org.wahlzeit.utils.MathUtils#DEFAULT_PRECISION}.
+     * @see  {@link Coordinate#getDistance(Coordinate)}
      * @methodtype boolean-query
      */
     boolean isEqual(Coordinate otherCoord);

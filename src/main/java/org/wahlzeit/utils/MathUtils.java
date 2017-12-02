@@ -35,7 +35,11 @@ public class MathUtils {
     }
 
     public static boolean doublesAreEqual(double valuaA, double valueB) {
-        return DoubleMath.fuzzyEquals(valuaA, valueB, getPrecision());
+        return doublesAreEqual(valuaA, valueB, getPrecision());
+    }
+
+    public static boolean doublesAreEqual(double valuaA, double valueB, double precision) {
+        return DoubleMath.fuzzyEquals(valuaA, valueB, precision);
     }
 
     /**

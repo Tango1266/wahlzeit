@@ -25,6 +25,7 @@
 package org.wahlzeit.model.coordinates.impl;
 
 import org.wahlzeit.model.coordinates.Coordinate;
+import org.wahlzeit.utils.MathUtils;
 
 public abstract class AbstractCoordinate implements Coordinate {
 
@@ -32,11 +33,6 @@ public abstract class AbstractCoordinate implements Coordinate {
      * @return distance, defined by its caller
      */
     protected abstract double doCalculateDistance(Coordinate otherCoord);
-
-    /**
-     * @return true, if the properties defined by its caller are equal
-     */
-    protected abstract boolean doIsEqual(Coordinate otherCoord);
 
     @Override
     public double getDistance(Coordinate otherCoord) {
@@ -64,17 +60,31 @@ public abstract class AbstractCoordinate implements Coordinate {
         if (this == otherCoord) {
             return true;
         }
-        if (otherCoord == null) {
+        if (isNullOrNullCoordinate(otherCoord)) {
             return false;
         }
-        return doIsEqual(otherCoord);
+        return getDistance(otherCoord) <= MathUtils.getPrecision();
     }
 
+    /**
+     * @return hashes calculated from cartesian ordinates
+     */
     @Override
-    public abstract int hashCode();
+    public int hashCode() {
+        CartesianCoordinate thisCartCoord = asCartesianCoordinate();
+        int result;
+        long temp;
+        temp = Double.doubleToLongBits(thisCartCoord.getY());
+        result = (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(thisCartCoord.getX());
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(thisCartCoord.getZ());
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
 
     /**
-     * {@link #isEqual(Coordinate) isEqual(Coordinate)}
+     * @see {@link #isEqual(Coordinate) isEqual(Coordinate)}
      */
     @Override
     public boolean equals(Object o) {
