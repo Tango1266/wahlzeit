@@ -49,6 +49,9 @@ public abstract class AbstractCoordinate implements Coordinate {
 
     @Override
     public double getCartesianDistance(Coordinate otherCoord) {
+        if (isNoWhere(otherCoord)) {
+            return -1;
+        }
         return asCartesianCoordinate().doCalculateDistance(otherCoord);
     }
 
