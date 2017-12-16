@@ -61,8 +61,10 @@ public class DomainCfg {
         return Logger.getLogger(instance.getClass().getName());
     }
 
-    public static void logError(Object instance, Exception ex) {
-        DomainCfg.getLogger(instance.getClass()).warning(LogBuilder.createSystemMessage().addException(ex.getMessage(), ex).toString());
+    public static String logError(Object instance, Throwable ex) {
+        String logContent = LogBuilder.createSystemMessage().addException(ex.getMessage(), ex).toString();
+        DomainCfg.getLogger(instance.getClass()).warning(logContent);
+        return logContent;
     }
 
     private static void initializeGurkenDomain() {

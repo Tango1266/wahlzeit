@@ -25,6 +25,8 @@
 package org.wahlzeit.handlers;
 
 import org.wahlzeit.model.*;
+import org.wahlzeit.model.config.DomainCfg;
+import org.wahlzeit.model.exceptions.PhotoCouldNotBeFetchedException;
 import org.wahlzeit.utils.HtmlUtil;
 import org.wahlzeit.webparts.WebPart;
 import org.wahlzeit.webparts.Writable;
@@ -74,7 +76,11 @@ public class ShowUserHomePageHandler extends AbstractWebPageHandler {
             WritableList list = new WritableList();
             for (Photo photo : photos) {
                 // load it from the GurkenPhotoManager to make sure the same copy is used
-                photo = PhotoManager.getInstance().getPhotoFromId(photo.getId());
+                try {
+                    photo = PhotoManager.getInstance().getPhoto(photo.getId());
+                } catch (PhotoCouldNotBeFetchedException e) {
+                    DomainCfg.logError(this, e);
+                }
                 if (!photo.getStatus().isDeleted()) {
                     part = makeUserPhotoForm(us, photo);
                     list.append(part);

@@ -29,6 +29,8 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Ignore;
 import com.googlecode.objectify.annotation.Parent;
+import org.wahlzeit.model.config.DomainCfg;
+import org.wahlzeit.model.exceptions.PhotoCouldNotBeFetchedException;
 import org.wahlzeit.services.EmailAddress;
 import org.wahlzeit.services.Language;
 import org.wahlzeit.services.ObjectManager;
@@ -243,7 +245,11 @@ public abstract class Client implements Serializable, Persistent {
         Photo result = null;
         while (indexOfLastPraisedPhoto >= 0 && result == null) {
             PhotoId lastPraisedPhotoId = praisedPhotoIds.get(indexOfLastPraisedPhoto);
-            result = PhotoManager.getInstance().getPhoto(lastPraisedPhotoId);
+            try {
+                result = PhotoManager.getInstance().getPhoto(lastPraisedPhotoId);
+            } catch (PhotoCouldNotBeFetchedException e) {
+                DomainCfg.logError(this, e);
+            }
             if (!result.isVisible()) {
                 result = null;
                 indexOfLastPraisedPhoto--;

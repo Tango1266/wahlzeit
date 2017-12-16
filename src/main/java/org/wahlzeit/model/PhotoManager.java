@@ -27,6 +27,9 @@ package org.wahlzeit.model;
 import com.google.appengine.api.images.Image;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Work;
+import org.wahlzeit.model.config.DomainCfg;
+import org.wahlzeit.model.exceptions.PhotoCouldNotBeCreatedException;
+import org.wahlzeit.model.exceptions.PhotoCouldNotBeFetchedException;
 import org.wahlzeit.model.persistence.ImageStorage;
 import org.wahlzeit.services.LogBuilder;
 import org.wahlzeit.services.ObjectManager;
@@ -48,7 +51,7 @@ public abstract class PhotoManager extends ObjectManager {
      */
     private static PhotoManager instance;
 
-    private static final Logger log = Logger.getLogger(getInstance() != null ? getInstance().getClass().getName() : PhotoManager.class.getName());
+    private static final Logger log = Logger.getLogger(instance != null ? getInstance().getClass().getName() : PhotoManager.class.getName());
     /**
      * In-memory cache for photos
      */
@@ -67,7 +70,6 @@ public abstract class PhotoManager extends ObjectManager {
     }
 
     public static void setInstance(PhotoManager implementation) throws IllegalStateException {
-        Assert.isNull(instance, "PhotoManager");
         instance = implementation;
     }
 
@@ -75,11 +77,12 @@ public abstract class PhotoManager extends ObjectManager {
      *
      */
     public static PhotoManager getInstance() {
+        Assert.notNull(instance, "Singleton instance must be set before it can be used.");
         return instance;
     }
 
     /**
-     *
+     * used by TellFriendFormHandler
      */
     public final boolean hasPhoto(String id) {
         Assert.notNull(id, "ID as String");
@@ -87,44 +90,36 @@ public abstract class PhotoManager extends ObjectManager {
     }
 
     /**
-     *
+     * used by Wahlzeit
      */
     public final boolean hasPhoto(PhotoId id) {
-        return getPhoto(id) != null;
-    }
-
-    /**
-     *
-     */
-    public Photo getPhoto(PhotoId id) {
-        return getInstance().getPhotoFromId(id);
-    }
-
-    /**
-     *
-     */
-    public Photo getPhotoFromId(PhotoId id) {
-        if (id == null) {
-            return null;
+        try {
+            getPhoto(id);
+        } catch (PhotoCouldNotBeFetchedException e) {
+            return false;
         }
-
-        Photo result = doGetPhotoFromId(id);
-
-        if (result == null) {
-            result = PhotoFactory.getInstance().loadPhoto(id);
-            if (result != null) {
-                doAddPhoto(result);
-            }
-        }
-
-        return result;
+        return true;
     }
 
     /**
+     * used 20 times by Wahlzeit
+     */
+    public Photo getPhoto(PhotoId id) throws PhotoCouldNotBeFetchedException {
+        Photo retrievedPhoto;
+        try {
+            retrievedPhoto = getInstance().getPhotoFromId(id);
+        } catch (Exception ex) {
+            String logcontent = DomainCfg.logError(this, ex);
+            retrievedPhoto = new Photo();
+            throw new PhotoCouldNotBeFetchedException(logcontent);
+        }
+        return retrievedPhoto;
+    }
+
+    /** used 22 times by Wahlzeit
      * @methodtype get
      */
-    public final Photo getPhoto(String id) {
-
+    public final Photo getPhoto(String id) throws PhotoCouldNotBeFetchedException {
         return getPhoto(PhotoId.getIdFromString(id));
     }
 
@@ -132,6 +127,7 @@ public abstract class PhotoManager extends ObjectManager {
      * @methodtype init Loads all Photos from the Datastore and holds them in the cache
      */
     public void init() {
+        //wont throw any exceptions
         loadPhotos();
     }
 
@@ -165,18 +161,10 @@ public abstract class PhotoManager extends ObjectManager {
     }
 
     /**
-     *
+     * used 3 times by wahlzeit
      */
     public void savePhoto(Photo photo) {
         updateObject(photo);
-    }
-
-    /**
-     * @methodtype helper
-     */
-    public List<Tag> addTagsThatMatchCondition(List<Tag> tags, String condition) {
-        readObjects(tags, Tag.class, Tag.TEXT, condition);
-        return tags;
     }
 
     /**
@@ -220,9 +208,16 @@ public abstract class PhotoManager extends ObjectManager {
      */
     public Photo createPhoto(String filename, Image uploadedImage) throws Exception {
         PhotoId id = PhotoId.getNextId();
-        Photo result = PhotoUtil.createPhoto(filename, id, uploadedImage);
-        addPhoto(result);
-        return result;
+        Photo newPhoto;
+        try {
+            newPhoto = PhotoUtil.createPhoto(filename, id, uploadedImage);
+        } catch (Throwable ex) {
+            String logContent = DomainCfg.logError(this, ex);
+            newPhoto = new Photo();
+            throw new PhotoCouldNotBeCreatedException(logContent);
+        }
+        addPhoto(newPhoto);
+        return newPhoto;
     }
 
     /**
@@ -241,6 +236,32 @@ public abstract class PhotoManager extends ObjectManager {
      */
     public void removePhoto(Photo photo) throws IOException {
         photoCache.remove(photo.id);
+    }
+
+    /**
+     * @methodtype helper
+     */
+    protected List<Tag> addTagsThatMatchCondition(List<Tag> tags, String condition) {
+        readObjects(tags, Tag.class, Tag.TEXT, condition);
+        return tags;
+    }
+
+    /**
+     *
+     */
+    protected Photo getPhotoFromId(PhotoId id) {
+        Assert.notNull(id, "PhotoID");
+
+        Photo result = doGetPhotoFromId(id);
+
+        if (result == null) {
+            result = PhotoFactory.getInstance().loadPhoto(id);
+            if (result != null) {
+                doAddPhoto(result);
+            }
+        }
+        Assert.notNull(result, "Photo");
+        return result;
     }
 
     /**

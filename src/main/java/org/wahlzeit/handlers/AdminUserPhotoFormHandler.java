@@ -26,6 +26,8 @@ package org.wahlzeit.handlers;
 
 import org.wahlzeit.agents.AsyncTaskExecutor;
 import org.wahlzeit.model.*;
+import org.wahlzeit.model.config.DomainCfg;
+import org.wahlzeit.model.exceptions.PhotoCouldNotBeFetchedException;
 import org.wahlzeit.services.LogBuilder;
 import org.wahlzeit.webparts.WebPart;
 
@@ -52,7 +54,12 @@ public class AdminUserPhotoFormHandler extends AbstractWebFormHandler {
     @Override
     protected void doMakeWebPart(UserSession us, WebPart part) {
         String photoId = (String) us.getSavedArg("photoId");
-        Photo photo = PhotoManager.getInstance().getPhoto(photoId);
+        Photo photo = null;
+        try {
+            photo = PhotoManager.getInstance().getPhoto(photoId);
+        } catch (PhotoCouldNotBeFetchedException e) {
+            DomainCfg.logError(this, e);
+        }
         part.addString(Photo.THUMB, getPhotoThumb(us, photo));
 
         part.addString("photoId", photoId);
@@ -67,7 +74,12 @@ public class AdminUserPhotoFormHandler extends AbstractWebFormHandler {
     @Override
     protected String doHandlePost(UserSession us, Map args) {
         String id = us.getAndSaveAsString(args, "photoId");
-        Photo photo = PhotoManager.getInstance().getPhoto(id);
+        Photo photo = null;
+        try {
+            photo = PhotoManager.getInstance().getPhoto(id);
+        } catch (PhotoCouldNotBeFetchedException e) {
+            DomainCfg.logError(this, e);
+        }
 
         String tags = us.getAndSaveAsString(args, Photo.TAGS);
         photo.setTags(new Tags(tags));

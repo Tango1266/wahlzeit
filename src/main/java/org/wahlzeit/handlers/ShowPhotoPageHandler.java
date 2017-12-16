@@ -25,6 +25,8 @@
 package org.wahlzeit.handlers;
 
 import org.wahlzeit.model.*;
+import org.wahlzeit.model.config.DomainCfg;
+import org.wahlzeit.model.exceptions.PhotoCouldNotBeFetchedException;
 import org.wahlzeit.utils.HtmlUtil;
 import org.wahlzeit.webparts.WebPart;
 import org.wahlzeit.webparts.Writable;
@@ -75,9 +77,11 @@ public class ShowPhotoPageHandler extends AbstractWebPageHandler implements WebF
         PhotoSize pagePhotoSize = client.getPhotoSize();
 
         PhotoId photoId = us.getPhotoId();
-        Photo photo = PhotoManager.getInstance().getPhoto(photoId);
-
-        if (photo == null) {
+        Photo photo = null;
+        try {
+            photo = PhotoManager.getInstance().getPhoto(photoId);
+        } catch (PhotoCouldNotBeFetchedException e) {
+            DomainCfg.logError(this, e);
             page.addString("mainWidth", String.valueOf(pagePhotoSize.getMaxPhotoWidth()));
             WebPart done = createWebPart(us, PartUtil.DONE_INFO_FILE);
             page.addWritable(Photo.IMAGE, done);
@@ -102,7 +106,12 @@ public class ShowPhotoPageHandler extends AbstractWebPageHandler implements WebF
      */
     protected void makePhotoCaption(UserSession us, WebPart page) {
         PhotoId photoId = us.getPhotoId();
-        Photo photo = PhotoManager.getInstance().getPhoto(photoId);
+        Photo photo = null;
+        try {
+            photo = PhotoManager.getInstance().getPhoto(photoId);
+        } catch (PhotoCouldNotBeFetchedException e) {
+            DomainCfg.logError(this, e);
+        }
 
         WebPart caption = createWebPart(us, PartUtil.CAPTION_INFO_FILE);
         caption.addString(Photo.CAPTION, getPhotoCaption(us, photo));
@@ -128,9 +137,14 @@ public class ShowPhotoPageHandler extends AbstractWebPageHandler implements WebF
     protected void makeRightSidebar(UserSession us, WebPart page) {
         String handlerName = PartUtil.NULL_FORM_NAME;
         PhotoId photoId = us.getPhotoId();
-        Photo photo = PhotoManager.getInstance().getPhoto(photoId);
-        if (photo != null) {
+        Photo photo = null;
+        try {
+            photo = PhotoManager.getInstance().getPhoto(photoId);
+            //photo != null
             handlerName = PartUtil.PRAISE_PHOTO_FORM_NAME;
+
+        } catch (PhotoCouldNotBeFetchedException e) {
+            DomainCfg.logError(this, e);
         }
 
         WebFormHandler handler = getFormHandler(handlerName);
@@ -159,7 +173,11 @@ public class ShowPhotoPageHandler extends AbstractWebPageHandler implements WebF
         Photo photo = null;
 
         if (!link.equals(PartUtil.SHOW_PHOTO_PAGE_NAME)) {
-            photo = PhotoManager.getInstance().getPhoto(link);
+            try {
+                photo = PhotoManager.getInstance().getPhoto(link);
+            } catch (PhotoCouldNotBeFetchedException e) {
+                DomainCfg.logError(this, e);
+            }
         }
 
         PhotoManager gurkenPhotoManager = PhotoManager.getInstance();
@@ -203,7 +221,12 @@ public class ShowPhotoPageHandler extends AbstractWebPageHandler implements WebF
     @Override
     protected void makeWebPageBody(UserSession us, WebPart page) {
         PhotoId photoId = us.getPhotoId();
-        Photo photo = PhotoManager.getInstance().getPhoto(photoId);
+        Photo photo = null;
+        try {
+            photo = PhotoManager.getInstance().getPhoto(photoId);
+        } catch (PhotoCouldNotBeFetchedException e) {
+            DomainCfg.logError(this, e);
+        }
 
         makeLeftSidebar(us, page);
 
@@ -231,8 +254,10 @@ public class ShowPhotoPageHandler extends AbstractWebPageHandler implements WebF
         String result = PartUtil.DEFAULT_PAGE_NAME;
 
         String id = us.getAndSaveAsString(args, Photo.ID);
-        Photo photo = PhotoManager.getInstance().getPhoto(id);
-        if (photo != null) {
+        Photo photo = null;
+        try {
+            photo = PhotoManager.getInstance().getPhoto(id);
+            // photo != null
             if (us.isFormType(args, "flagPhotoLink")) {
                 result = PartUtil.FLAG_PHOTO_PAGE_NAME;
             } else if (us.isFormType(args, "tellFriendLink")) {
@@ -240,6 +265,8 @@ public class ShowPhotoPageHandler extends AbstractWebPageHandler implements WebF
             } else if (us.isFormType(args, "sendEmailLink")) {
                 result = PartUtil.SEND_EMAIL_PAGE_NAME;
             }
+        } catch (PhotoCouldNotBeFetchedException e) {
+            DomainCfg.logError(this, e);
         }
 
         return result;

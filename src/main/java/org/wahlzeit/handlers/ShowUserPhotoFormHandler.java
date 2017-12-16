@@ -25,6 +25,8 @@
 package org.wahlzeit.handlers;
 
 import org.wahlzeit.model.*;
+import org.wahlzeit.model.config.DomainCfg;
+import org.wahlzeit.model.exceptions.PhotoCouldNotBeFetchedException;
 import org.wahlzeit.services.LogBuilder;
 import org.wahlzeit.utils.HtmlUtil;
 import org.wahlzeit.utils.StringUtil;
@@ -53,7 +55,12 @@ public class ShowUserPhotoFormHandler extends AbstractWebFormHandler {
     @Override
     protected void doMakeWebPart(UserSession us, WebPart part) {
         PhotoId photoId = us.getPhotoId();
-        Photo photo = PhotoManager.getInstance().getPhoto(photoId);
+        Photo photo = null;
+        try {
+            photo = PhotoManager.getInstance().getPhoto(photoId);
+        } catch (PhotoCouldNotBeFetchedException e) {
+            DomainCfg.logError(this, e);
+        }
         String id = photo.getId().asString();
         ModelConfig config = us.getClient().getLanguageConfiguration();
         part.addString(Photo.ID, id);
@@ -78,8 +85,14 @@ public class ShowUserPhotoFormHandler extends AbstractWebFormHandler {
     @Override
     protected boolean isWellFormedPost(UserSession us, Map args) {
         String id = us.getAsString(args, Photo.ID);
-        Photo photo = PhotoManager.getInstance().getPhoto(id);
-        return (photo != null) && us.isPhotoOwner(photo);
+        Photo photo = null;
+        try {
+            photo = PhotoManager.getInstance().getPhoto(id);
+        } catch (PhotoCouldNotBeFetchedException e) {
+            DomainCfg.logError(this, e);
+            return false;
+        }
+        return us.isPhotoOwner(photo);
     }
 
     /**
@@ -90,7 +103,12 @@ public class ShowUserPhotoFormHandler extends AbstractWebFormHandler {
         String result = PartUtil.SHOW_USER_HOME_PAGE_NAME;
 
         String id = us.getAndSaveAsString(args, Photo.ID);
-        Photo photo = PhotoManager.getInstance().getPhoto(id);
+        Photo photo = null;
+        try {
+            photo = PhotoManager.getInstance().getPhoto(id);
+        } catch (PhotoCouldNotBeFetchedException e) {
+            DomainCfg.logError(this, e);
+        }
 
         UserManager userManager = UserManager.getInstance();
         User user = userManager.getUserById(photo.getOwnerId());

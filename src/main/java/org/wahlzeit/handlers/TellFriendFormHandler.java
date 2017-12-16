@@ -25,6 +25,8 @@
 package org.wahlzeit.handlers;
 
 import org.wahlzeit.model.*;
+import org.wahlzeit.model.config.DomainCfg;
+import org.wahlzeit.model.exceptions.PhotoCouldNotBeFetchedException;
 import org.wahlzeit.services.EmailAddress;
 import org.wahlzeit.services.LogBuilder;
 import org.wahlzeit.services.mailing.EmailService;
@@ -76,7 +78,12 @@ public class TellFriendFormHandler extends AbstractWebFormHandler {
         }
 
         part.addString(Photo.ID, id);
-        Photo photo = PhotoManager.getInstance().getPhoto(id);
+        Photo photo = null;
+        try {
+            photo = PhotoManager.getInstance().getPhoto(id);
+        } catch (PhotoCouldNotBeFetchedException e) {
+            DomainCfg.logError(this, e);
+        }
         part.addString(Photo.THUMB, getPhotoThumb(us, photo));
 
         part.maskAndAddStringFromArgsWithDefault(args, EMAIL_BODY, emailText);

@@ -38,7 +38,7 @@ public abstract class PhotoFactory {
      * Hidden singleton instance; needs to be initialized from the outside.
      */
     private static PhotoFactory instance;
-    private static final Logger log = Logger.getLogger(getInstance() != null ? getInstance().getClass().getName() : PhotoFactory.class.getName());
+    private static final Logger log = Logger.getLogger(instance != null ? getInstance().getClass().getName() : PhotoFactory.class.getName());
 
     /**
      *

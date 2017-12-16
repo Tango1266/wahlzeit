@@ -25,6 +25,8 @@
 package org.wahlzeit.handlers;
 
 import org.wahlzeit.model.*;
+import org.wahlzeit.model.config.DomainCfg;
+import org.wahlzeit.model.exceptions.PhotoCouldNotBeFetchedException;
 import org.wahlzeit.services.LogBuilder;
 import org.wahlzeit.utils.StringUtil;
 import org.wahlzeit.webparts.WebPart;
@@ -63,8 +65,12 @@ public class PraisePhotoFormHandler extends AbstractWebFormHandler {
     @Override
     protected boolean isWellFormedPost(UserSession us, Map args) {
         String photoId = us.getAsString(args, Photo.ID);
-        Photo photo = PhotoManager.getInstance().getPhoto(photoId);
-        return photo != null;
+        try {
+            PhotoManager.getInstance().getPhoto(photoId);
+        } catch (PhotoCouldNotBeFetchedException ex) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -73,7 +79,13 @@ public class PraisePhotoFormHandler extends AbstractWebFormHandler {
     @Override
     protected String doHandlePost(UserSession us, Map args) {
         String photoId = us.getAsString(args, Photo.ID);
-        Photo photo = PhotoManager.getInstance().getPhoto(photoId);
+        Photo photo = null;
+        try {
+            photo = PhotoManager.getInstance().getPhoto(photoId);
+        } catch (PhotoCouldNotBeFetchedException e) {
+            DomainCfg.logError(this, e);
+            throw new RuntimeException("Post could not be handled because the Photo could not be fetched");
+        }
         String praise = us.getAsString(args, Photo.PRAISE);
         Client client = us.getClient();
 

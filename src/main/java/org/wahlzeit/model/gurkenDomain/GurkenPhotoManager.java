@@ -27,6 +27,8 @@ package org.wahlzeit.model.gurkenDomain;
 import org.wahlzeit.model.Photo;
 import org.wahlzeit.model.PhotoId;
 import org.wahlzeit.model.PhotoManager;
+import org.wahlzeit.model.config.DomainCfg;
+import org.wahlzeit.model.exceptions.PhotoCouldNotBeFetchedException;
 import org.wahlzeit.utils.Assert;
 
 /**
@@ -46,7 +48,12 @@ public class GurkenPhotoManager extends PhotoManager {
 
     public GurkenPhoto getGurkenPhotoFromId(PhotoId id) {
         Assert.notNull(id, "");
-        Photo gurkenPhoto = getInstance().getPhoto(id);
+        Photo gurkenPhoto = null;
+        try {
+            gurkenPhoto = getInstance().getPhoto(id);
+        } catch (PhotoCouldNotBeFetchedException e) {
+            DomainCfg.logError(this, e);
+        }
         return gurkenPhoto instanceof GurkenPhoto ? (GurkenPhoto) gurkenPhoto : null;
     }
 }

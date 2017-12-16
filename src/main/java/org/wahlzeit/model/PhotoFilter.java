@@ -24,6 +24,8 @@
 
 package org.wahlzeit.model;
 
+import org.wahlzeit.model.config.DomainCfg;
+import org.wahlzeit.model.exceptions.PhotoCouldNotBeFetchedException;
 import org.wahlzeit.services.LogBuilder;
 import org.wahlzeit.utils.StringUtil;
 
@@ -253,7 +255,12 @@ public class PhotoFilter implements Serializable {
 
         int newPhotos = 0;
         for (PhotoId candidateId : candidates) {
-            Photo photoCandidate = PhotoManager.getInstance().getPhoto(candidateId);
+            Photo photoCandidate = null;
+            try {
+                photoCandidate = PhotoManager.getInstance().getPhoto(candidateId);
+            } catch (PhotoCouldNotBeFetchedException e) {
+                DomainCfg.logError(this, e);
+            }
             if (!processedPhotoIds.contains(candidateId) && !skippedPhotoIds.contains(candidateId) &&
                     photoCandidate.isVisible()) {
                 result.add(candidateId);

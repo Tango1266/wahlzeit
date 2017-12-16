@@ -29,6 +29,8 @@ import org.apache.http.HttpStatus;
 import org.wahlzeit.model.Photo;
 import org.wahlzeit.model.PhotoManager;
 import org.wahlzeit.model.PhotoSize;
+import org.wahlzeit.model.config.DomainCfg;
+import org.wahlzeit.model.exceptions.PhotoCouldNotBeFetchedException;
 import org.wahlzeit.model.persistence.ImageStorage;
 import org.wahlzeit.services.LogBuilder;
 
@@ -89,11 +91,16 @@ public class StaticDataServlet extends AbstractServlet {
      */
     private Image getImage(String photoId, int size) {
         Image image = null;
-        Photo photo = PhotoManager.getInstance().getPhoto(photoId);
-        if (photo != null) {
+        Photo photo = null;
+        try {
+            photo = PhotoManager.getInstance().getPhoto(photoId);
+            //photo != null
             PhotoSize photoSize = PhotoSize.getFromInt(size);
             image = photo.getImage(photoSize);
+        } catch (PhotoCouldNotBeFetchedException e) {
+            DomainCfg.logError(this, e);
         }
+
         // if not in cache load from Google Cloud Storage
         if (image == null) {
             Serializable rawImage = null;

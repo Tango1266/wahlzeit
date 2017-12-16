@@ -25,6 +25,8 @@
 package org.wahlzeit.handlers;
 
 import org.wahlzeit.model.*;
+import org.wahlzeit.model.config.DomainCfg;
+import org.wahlzeit.model.exceptions.PhotoCouldNotBeFetchedException;
 import org.wahlzeit.services.Language;
 import org.wahlzeit.services.LogBuilder;
 import org.wahlzeit.services.SysConfig;
@@ -149,7 +151,13 @@ public abstract class AbstractWebPartHandler implements WebPartHandler {
      */
     protected boolean isSavedPhotoVisible(UserSession us) {
         String id = us.getAsString(us.getSavedArgs(), Photo.ID);
-        Photo photo = PhotoManager.getInstance().getPhoto(id);
+        Photo photo = null;
+        try {
+            photo = PhotoManager.getInstance().getPhoto(id);
+        } catch (PhotoCouldNotBeFetchedException e) {
+            DomainCfg.logError(this, e);
+            return false;
+        }
         return photo.isVisible();
     }
 
