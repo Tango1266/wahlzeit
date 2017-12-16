@@ -28,6 +28,8 @@ import org.junit.*;
 import org.junit.rules.TestRule;
 import org.wahlzeit.model.*;
 import org.wahlzeit.model.coordinates.impl.NoWhereCoordinate;
+import org.wahlzeit.model.exceptions.PhotoCouldNotBeCreatedException;
+import org.wahlzeit.model.exceptions.PhotoCouldNotBeFetchedException;
 import org.wahlzeit.testEnvironmentProvider.DependencyInjectionRule;
 
 import java.io.IOException;
@@ -77,43 +79,43 @@ public class GurkenPhotoManagerTest extends GurkenDomainTest {
 
     @Test
     public void getPhoto_byOneID_shouldReturnCucumberSalty100() {
-        Assert.assertEquals(cucumberSalty100, gurkenPhotoManager.getPhoto(oneID));
+        Assert.assertEquals(cucumberSalty100, getPhoto(gurkenPhotoManager, oneID));
     }
 
     @Test
     public void getPhoto_byOneID_shouldNotReturnCucumberSalty120() {
-        Assert.assertNotEquals(cucumberSalty120, gurkenPhotoManager.getPhoto(oneID));
+        Assert.assertNotEquals(cucumberSalty120, getPhoto(gurkenPhotoManager, oneID));
     }
 
     @Test
     public void getPhoto_byTwoID_shouldReturnCucumberSalty120() {
-        Assert.assertEquals(cucumberSalty120, gurkenPhotoManager.getPhoto(twoID));
+        Assert.assertEquals(cucumberSalty120, getPhoto(gurkenPhotoManager, twoID));
     }
 
     @Test
     public void getPhoto_byTwoID_shouldNotReturnCucumberSalty100() {
-        Assert.assertNotEquals(cucumberSalty100, gurkenPhotoManager.getPhoto(twoID));
+        Assert.assertNotEquals(cucumberSalty100, getPhoto(gurkenPhotoManager, twoID));
     }
 
     @Test
     public void getGurkenPhoto_byThreeID_shouldReturnCucumberTasteless100() {
-        Assert.assertEquals(cucumberTasteless100, gurkenPhotoManager.getPhoto(threeID));
+        Assert.assertEquals(cucumberTasteless100, getPhoto(gurkenPhotoManager, threeID));
     }
 
     @Test
     public void getGurkenPhoto_byThreeID_shouldNotReturnCucumberTasteless120() {
-        Assert.assertNotEquals(cucumberSalty120, gurkenPhotoManager.getPhoto(threeID));
+        Assert.assertNotEquals(cucumberSalty120, getPhoto(gurkenPhotoManager, threeID));
     }
 
     @Test
     public void getPhoto_byFourID_shouldReturnPhotoAssignableFromGurkenPhoto() {
-        Assert.assertTrue(gurkenPhotoManager.getPhoto(fourID) instanceof Photo);
-        Assert.assertTrue(Photo.class.isAssignableFrom(gurkenPhotoManager.getPhoto(fourID).getClass()));
+        Assert.assertTrue(getPhoto(gurkenPhotoManager, fourID) instanceof Photo);
+        Assert.assertTrue(Photo.class.isAssignableFrom(getPhoto(gurkenPhotoManager, fourID).getClass()));
     }
 
     @Test
     public void getGurkenPhoto_byFourID_shouldReturnGurkenPhoto() {
-        Assert.assertTrue(gurkenPhotoManager.getPhoto(fourID) instanceof GurkenPhoto);
+        Assert.assertTrue(getPhoto(gurkenPhotoManager, fourID) instanceof GurkenPhoto);
     }
 
     @Test
@@ -129,6 +131,17 @@ public class GurkenPhotoManagerTest extends GurkenDomainTest {
     @Test
     public void gurkenPhotoManager_isSubclassOfPhotomanager_isTrue() {
         Assert.assertTrue(PhotoManager.class.isAssignableFrom(GurkenPhotoManager.class));
+    }
+
+    @Test
+    public void createPhoto_calledWithNulltrowsPhotoCouldNotBeCreatedException() {
+        try {
+            PhotoManager.getInstance().createPhoto(null, null);
+        } catch (Throwable e) {
+            Assert.assertTrue(e instanceof PhotoCouldNotBeCreatedException);
+            return;
+        }
+        Assert.fail("an exception should have been thrown");
     }
 
     private void prepairPhotoCache() {
@@ -160,5 +173,13 @@ public class GurkenPhotoManagerTest extends GurkenDomainTest {
 
     private GurkenPhoto createPhoto(PhotoId id, int sizeInMillimeter, Taste taste) {
         return gurkenPhotoFactory.createGurkenPhoto(id, TYPE, sizeInMillimeter, taste, noWhere);
+    }
+
+    private static Photo getPhoto(PhotoManager gurkenPhotoManager, PhotoId oneID) {
+        try {
+            return gurkenPhotoManager.getPhoto(oneID);
+        } catch (PhotoCouldNotBeFetchedException e) {
+        }
+        return null;
     }
 }

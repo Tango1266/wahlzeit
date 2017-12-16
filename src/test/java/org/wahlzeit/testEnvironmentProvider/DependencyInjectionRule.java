@@ -39,7 +39,7 @@ public class DependencyInjectionRule implements TestRule {
                 try {
                     DomainCfg.initializePhotoDomainModel();
                 } catch (IllegalStateException ex) {
-
+                    //do nothing
                 }
                 base.evaluate();
             }
