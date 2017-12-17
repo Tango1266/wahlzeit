@@ -62,9 +62,11 @@ public class DomainCfg {
     }
 
     public static String logError(Object instance, Throwable ex) {
-        String logContent = LogBuilder.createSystemMessage().addException(ex.getMessage(), ex).toString();
-        DomainCfg.getLogger(instance.getClass()).warning(logContent);
-        return logContent;
+        /*TODO: implement logging with less performance impact (asynchronous?)*/
+//        String logContent = LogBuilder.createSystemMessage().addException(ex.getMessage(), ex).toString();
+//        DomainCfg.getLogger(instance.getClass()).warning(logContent);
+//        return logContent;
+        return "";
     }
 
     private static void initializeGurkenDomain() {

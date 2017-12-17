@@ -85,13 +85,7 @@ public class ShowUserPhotoFormHandler extends AbstractWebFormHandler {
     @Override
     protected boolean isWellFormedPost(UserSession us, Map args) {
         String id = us.getAsString(args, Photo.ID);
-        Photo photo = null;
-        try {
-            photo = PhotoManager.getInstance().getPhoto(id);
-        } catch (PhotoCouldNotBeFetchedException e) {
-            DomainCfg.logError(this, e);
-            return false;
-        }
+        Photo photo = PhotoHandler.getPhotoIgnoreException(id);
         return us.isPhotoOwner(photo);
     }
 
@@ -103,12 +97,7 @@ public class ShowUserPhotoFormHandler extends AbstractWebFormHandler {
         String result = PartUtil.SHOW_USER_HOME_PAGE_NAME;
 
         String id = us.getAndSaveAsString(args, Photo.ID);
-        Photo photo = null;
-        try {
-            photo = PhotoManager.getInstance().getPhoto(id);
-        } catch (PhotoCouldNotBeFetchedException e) {
-            DomainCfg.logError(this, e);
-        }
+        Photo photo = PhotoHandler.getPhotoIgnoreException(id);
 
         UserManager userManager = UserManager.getInstance();
         User user = userManager.getUserById(photo.getOwnerId());

@@ -260,7 +260,7 @@ public abstract class PhotoManager extends ObjectManager {
                 doAddPhoto(result);
             }
         }
-        Assert.notNull(result, "Photo");
+        Assert.notNull(result, "Result of retrieving a Photo");
         return result;
     }
 
@@ -277,6 +277,7 @@ public abstract class PhotoManager extends ObjectManager {
      * @methodproperties primitive
      */
     protected void doAddPhoto(Photo myPhoto) {
+        Assert.notNull(myPhoto, "New Photo");
         photoCache.put(myPhoto.getId(), myPhoto);
     }
 

@@ -81,7 +81,6 @@ public class ShowPhotoPageHandler extends AbstractWebPageHandler implements WebF
         try {
             photo = PhotoManager.getInstance().getPhoto(photoId);
         } catch (PhotoCouldNotBeFetchedException e) {
-            DomainCfg.logError(this, e);
             page.addString("mainWidth", String.valueOf(pagePhotoSize.getMaxPhotoWidth()));
             WebPart done = createWebPart(us, PartUtil.DONE_INFO_FILE);
             page.addWritable(Photo.IMAGE, done);
@@ -173,11 +172,7 @@ public class ShowPhotoPageHandler extends AbstractWebPageHandler implements WebF
         Photo photo = null;
 
         if (!link.equals(PartUtil.SHOW_PHOTO_PAGE_NAME)) {
-            try {
-                photo = PhotoManager.getInstance().getPhoto(link);
-            } catch (PhotoCouldNotBeFetchedException e) {
-                DomainCfg.logError(this, e);
-            }
+            photo = PhotoHandler.getPhotoIgnoreException(link, null);
         }
 
         PhotoManager gurkenPhotoManager = PhotoManager.getInstance();
@@ -254,9 +249,8 @@ public class ShowPhotoPageHandler extends AbstractWebPageHandler implements WebF
         String result = PartUtil.DEFAULT_PAGE_NAME;
 
         String id = us.getAndSaveAsString(args, Photo.ID);
-        Photo photo = null;
         try {
-            photo = PhotoManager.getInstance().getPhoto(id);
+            PhotoManager.getInstance().getPhoto(id);
             // photo != null
             if (us.isFormType(args, "flagPhotoLink")) {
                 result = PartUtil.FLAG_PHOTO_PAGE_NAME;

@@ -26,7 +26,6 @@ package org.wahlzeit.handlers;
 
 import org.wahlzeit.main.ServiceMain;
 import org.wahlzeit.model.*;
-import org.wahlzeit.model.config.DomainCfg;
 import org.wahlzeit.model.exceptions.PhotoCouldNotBeFetchedException;
 import org.wahlzeit.services.LogBuilder;
 import org.wahlzeit.utils.StringUtil;
@@ -74,13 +73,11 @@ public class ShowAdminPageHandler extends AbstractWebPageHandler implements WebF
         WebFormHandler handler = getFormHandler(PartUtil.NULL_FORM_NAME);
 
         String photoId = us.getSavedArg("photoId").toString();
-        Photo photo = null;
         try {
-            photo = PhotoManager.getInstance().getPhoto(photoId);
+            PhotoManager.getInstance().getPhoto(photoId);
             //photo != null
             handler = getFormHandler(PartUtil.ADMIN_USER_PHOTO_FORM_NAME);
         } catch (PhotoCouldNotBeFetchedException e) {
-            DomainCfg.logError(this, e);
         }
 
         return handler.makeWebPart(us);
@@ -109,7 +106,6 @@ public class ShowAdminPageHandler extends AbstractWebPageHandler implements WebF
         try {
             PhotoManager.getInstance().getPhoto(photoId);
         } catch (PhotoCouldNotBeFetchedException e) {
-            DomainCfg.logError(this, e);
             us.setMessage(us.getClient().getLanguageConfiguration().getPhotoIsUnknown());
         }
 

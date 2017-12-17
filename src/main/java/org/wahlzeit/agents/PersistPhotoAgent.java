@@ -26,7 +26,6 @@ package org.wahlzeit.agents;
 
 import org.wahlzeit.model.Photo;
 import org.wahlzeit.model.PhotoManager;
-import org.wahlzeit.model.config.DomainCfg;
 import org.wahlzeit.model.exceptions.PhotoCouldNotBeFetchedException;
 import org.wahlzeit.services.LogBuilder;
 
@@ -64,7 +63,6 @@ public class PersistPhotoAgent extends HttpServlet {
                 PhotoManager.getInstance().savePhoto(photo);
                 log.config(LogBuilder.createSystemMessage().addMessage("Photo saved.").toString());
             } catch (PhotoCouldNotBeFetchedException e) {
-                DomainCfg.logError(this, e);
                 response.setStatus(299);
                 throw new IllegalArgumentException("Could not find Photo with ID " + id);
             }
