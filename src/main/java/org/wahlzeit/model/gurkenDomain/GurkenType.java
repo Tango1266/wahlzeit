@@ -62,16 +62,22 @@ public class GurkenType {
         if (gurke.getType() == this) {
             return true;
         }
+        return isSubType(gurke.getType());
+    }
 
+    public boolean isSubType(GurkenType gurkenType) {
+        Assert.notNull(gurkenType, "Gurken Subtype");
+
+        if (gurkenType == this) {
+            return true;
+        }
         Iterator<GurkenType> subTypeItter = getSubTypeIterator();
-
         while (subTypeItter.hasNext()) {
             GurkenType nextSubType = subTypeItter.next();
-            if (nextSubType.hasInstance(gurke)) {
+            if (nextSubType.isSubType(gurkenType)) {
                 return true;
             }
         }
-
         return false;
     }
 

@@ -73,6 +73,10 @@ public class GurkenTypeTest extends GurkeTest {
     }
 
     @Test
+    public void isSubType_roteStachelGurke_ofStachelgruke_true() {
+        Assert.assertTrue(stachelGurke.isSubType(roteStachelGurke));
+    }
+    @Test
     public void subTypes_ofStachelGurke_areRote_andGelbeStachelgurke_true() {
         Iterator<GurkenType> gurkenTypeIterator = stachelGurke.getSubTypeIterator();
         int subTypes = 0;
