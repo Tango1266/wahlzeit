@@ -24,11 +24,12 @@
 
 package org.wahlzeit.model.gurkenDomain;
 
+import org.wahlzeit.services.ObjectManager;
 import org.wahlzeit.utils.Assert;
 
 import java.util.HashMap;
 
-public class GurkenManager {
+public class GurkenManager extends ObjectManager{
 
     private static final GurkenManager instance = new GurkenManager();
     private HashMap<String, GurkenType> types = new HashMap<>();

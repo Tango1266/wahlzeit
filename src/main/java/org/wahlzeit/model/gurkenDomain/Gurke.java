@@ -24,6 +24,7 @@
 
 package org.wahlzeit.model.gurkenDomain;
 
+import org.wahlzeit.services.DataObject;
 import org.wahlzeit.utils.Assert;
 import org.wahlzeit.utils.Pattern;
 import org.wahlzeit.utils.PatternInstance;
@@ -37,7 +38,7 @@ import org.wahlzeit.utils.PatternInstance;
 /**
  * Represents a specific Gurke of a certain GurkenType
  */
-public class Gurke {
+public class Gurke extends DataObject{
     private Taste taste;
     private int size;
 
