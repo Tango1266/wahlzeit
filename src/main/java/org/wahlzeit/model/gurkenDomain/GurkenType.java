@@ -24,6 +24,8 @@
 
 package org.wahlzeit.model.gurkenDomain;
 
+import com.googlecode.objectify.annotation.Ignore;
+import org.wahlzeit.services.DataObject;
 import org.wahlzeit.utils.Assert;
 import org.wahlzeit.utils.Pattern;
 import org.wahlzeit.utils.PatternInstance;
@@ -37,16 +39,17 @@ import java.util.Set;
         classRole = "Type Object",
         participants = {Gurke.class, GurkenType.class}
 )
-//TODO: Prepaire TypeObject hirarchy for objectify service (@ID etc)
 /**
  * Represents a certain GurkenType with its meta information.
  * GurkenTypes will be determined during runtime
  */
-public class GurkenType {
+public class GurkenType extends DataObject {
     private String strain;
+    @Ignore
     GurkenManager manager;
-
+    @Ignore
     public GurkenType superType = null;
+    @Ignore
     public Set<GurkenType> subTypes = new HashSet<>();
 
     public GurkenType(String strain) {
@@ -59,9 +62,6 @@ public class GurkenType {
 
     public boolean hasInstance(Gurke gurke) {
         Assert.notNull(gurke, "Gurken Instance");
-        if (gurke.getType() == this) {
-            return true;
-        }
         return isSubType(gurke.getType());
     }
 
@@ -93,6 +93,9 @@ public class GurkenType {
         return subTypes.iterator();
     }
 
+    /**
+     * @methodtype mutation method
+     */
     public void addSubType(GurkenType gurkenType) {
         Assert.notNull(gurkenType, "GurkenSubType");
         gurkenType.setSuperType(this);
@@ -108,6 +111,9 @@ public class GurkenType {
         this.strain = strain;
     }
 
+    /**
+     * @methodtype factory method
+     */
     public Gurke createInstance(Taste taste, int size) {
         return new Gurke(this, taste, size);
     }

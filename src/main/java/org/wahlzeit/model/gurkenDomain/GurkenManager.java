@@ -29,6 +29,10 @@ import org.wahlzeit.utils.Assert;
 
 import java.util.HashMap;
 
+/**
+ * Manages the domain subject Gurke and its corresponding Types.
+ * Should be understood as a single touch point to interact with the domain subject.
+ */
 public class GurkenManager extends ObjectManager{
 
     private static final GurkenManager instance = new GurkenManager();
@@ -45,21 +49,35 @@ public class GurkenManager extends ObjectManager{
         return instance;
     }
 
+    /**
+     * implementation of the value object pattern. It gets the desired object from a cache.
+     * It will create and eventually cache the desired object and corresponding {@link GurkenType}
+     * in {@link GurkenManager#getType(String)}.
+     * @methodtype query-, mutation-, factory method
+     */
     public Gurke getGurke(String type, Taste taste, int size) {
         GurkenType gt = getType(type);
         Gurke gurke = gt.createInstance(taste, size);
-
         int mapKey = gurke.hashCode();
         if (!gurken.containsKey(mapKey)) {
             gurken.put(mapKey, gurke);
+            return gurke;
         }
-        return gurke;
+        return gurken.get(mapKey);
     }
 
+    /**
+     * {@link GurkenManager#getGurke(String, Taste, int)}
+     */
     public Gurke getGurke(String type) {
         return getGurke(type, Taste.UNSPECIFIED, 0);
     }
 
+    /**
+     * implementation of the value object pattern. It gets the desired object from a cache.
+     * Eventually, it will create and cache the desired object.
+     * @methodtype query-, mutation-, factory method
+     */
     public GurkenType getType(String gurkenTypeName) {
         assertIsValidTypeName(gurkenTypeName);
         if (!types.containsKey(gurkenTypeName)) {
