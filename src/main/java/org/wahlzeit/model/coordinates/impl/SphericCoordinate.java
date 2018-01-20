@@ -148,6 +148,6 @@ public class SphericCoordinate extends AbstractCoordinate {
     }
 
     private void assertRadius(double radius) {
-        Assert.notNegative(radius);
+        Assert.notNegative(radius, "radius");
     }
 }
