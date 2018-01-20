@@ -24,6 +24,8 @@
 
 package org.wahlzeit.model.gurkenDomain;
 
+import com.googlecode.objectify.annotation.Ignore;
+import org.wahlzeit.services.DataObject;
 import org.wahlzeit.utils.Assert;
 import org.wahlzeit.utils.Pattern;
 import org.wahlzeit.utils.PatternInstance;
@@ -33,19 +35,19 @@ import org.wahlzeit.utils.PatternInstance;
         classRole = "Object",
         participants = {Gurke.class, GurkenType.class}
 )
-//TODO: Prepaire TypeObject hirarchy for objectify service (@ID etc)
 /**
  * Represents a specific Gurke of a certain GurkenType
  */
-public class Gurke {
+public class Gurke extends DataObject{
     private Taste taste;
     private int size;
-
     //Metainformation
     private String strain;
-
     //attribute is required by uml diagram
+
+    @Ignore
     public GurkenManager manager = GurkenManager.getInstance();
+    @Ignore
     public GurkenType type;
 
     public Gurke(GurkenType type, Taste taste, int size) {
@@ -131,5 +133,4 @@ public class Gurke {
                 ", type=" + type +
                 '}';
     }
-
 }

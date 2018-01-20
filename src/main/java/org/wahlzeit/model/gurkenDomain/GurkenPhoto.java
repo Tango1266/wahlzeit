@@ -25,7 +25,6 @@
 package org.wahlzeit.model.gurkenDomain;
 
 import com.googlecode.objectify.annotation.Entity;
-import com.googlecode.objectify.annotation.Serialize;
 import com.googlecode.objectify.annotation.Subclass;
 import org.wahlzeit.model.Location;
 import org.wahlzeit.model.Photo;
@@ -38,7 +37,6 @@ import org.wahlzeit.model.PhotoId;
 @Subclass
 public class GurkenPhoto extends Photo {
 
-    @Serialize
     private Gurke gurkenInfo;
 
     /**

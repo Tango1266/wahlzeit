@@ -33,9 +33,9 @@ public class Assert {
      * checks whether a value is lesser then zero
      * @methodtype assert
      */
-    public static void notNegative(double value) throws IllegalArgumentException {
+    public static void notNegative(double value, String valueSpecification) throws IllegalArgumentException {
         if (value < 0) {
-            RuntimeException exception = new IllegalArgumentException("The radius must be greater then 0 but was actually " + value);
+            RuntimeException exception = new IllegalArgumentException(String.format("The %s  must be greater then 0 but was actually %f", valueSpecification, value));
             DomainCfg.logError(Assert.class, exception);
             throw exception;
         }
