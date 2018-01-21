@@ -30,6 +30,7 @@ import org.wahlzeit.utils.Assert;
 import org.wahlzeit.utils.Pattern;
 import org.wahlzeit.utils.PatternInstance;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -46,11 +47,11 @@ import java.util.Set;
 public class GurkenType extends DataObject {
     private String strain;
     @Ignore
-    GurkenManager manager;
+    private Set<GurkenType> subTypes = Collections.synchronizedSet(new HashSet<GurkenType>());
     @Ignore
-    public GurkenType superType = null;
+    private GurkenType superType = null;
     @Ignore
-    public Set<GurkenType> subTypes = new HashSet<>();
+    public /*because of uml-req*/ GurkenManager manager;
 
     public GurkenType(String strain) {
         setStrain(strain);
