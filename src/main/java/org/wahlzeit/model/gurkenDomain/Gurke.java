@@ -41,13 +41,14 @@ import org.wahlzeit.utils.PatternInstance;
 public class Gurke extends DataObject{
     private Taste taste;
     private int size;
-    //Metainformation
+    /* Metainformation provided from type, so
+    *  objectify does not need to pull attributes from type
+    */
     private String strain;
-    //attribute is required by uml diagram
 
-    @Ignore
+    @Ignore /*required public attribute by uml spec*/
     public GurkenManager manager = GurkenManager.getInstance();
-    @Ignore
+    @Ignore /*required public attribute by uml spec*/
     public GurkenType type;
 
     public Gurke(GurkenType type, Taste taste, int size) {
