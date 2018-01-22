@@ -32,6 +32,21 @@ import org.wahlzeit.model.PhotoId;
 
 /**
  * A gurkenphoto represents a user-provided (uploaded) photo of a cucumber.
+ *
+ *  * ===== Sequence of method calls =========
+ * 0) GurkenManager calls PhotoUtil#createPhoto
+ * 1) PhotoUtil calls GurkenPhotoFactory#createPhoto
+ * 2) GurkenPhotoFactory creates a GurkenPhoto with a fully specified signature
+ * 3) GurkenManager creates eventually a GurkenType if it is not known yet otherwise it will get it from a cache
+ * 4) GurkenManager calls GurkenType#createInstance to create a Gurke.
+ *
+ * ===== Six tuple - Solution space =========
+ * Delegation:	    Separate-object     -> GurkenPhotoFactory
+ * Selection:	    By-subclassing	    -> Sublass of PhotoFactory determines the Selection
+ * Configuration:	-
+ * Instantiation:	In-code	            -> No configuration needed
+ * Initialization:	Default             -> Constructor assignments
+ * Building:        Default
  */
 @Entity
 @Subclass
