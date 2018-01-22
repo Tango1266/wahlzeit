@@ -37,6 +37,21 @@ import org.wahlzeit.utils.PatternInstance;
 )
 /**
  * Represents a specific Gurke of a certain GurkenType
+ *
+ * ===== Sequence of method calls =========
+ * 0) GurkenManager calls PhotoUtil#createPhoto
+ * 1) PhotoUtil calls GurkenPhotoFactory#createPhoto
+ * 2) GurkenPhotoFactory calls GurkenManager#getGurke with a fully specified signature to get a Gurke
+ * 2) GurkenManager creates eventually a GurkenType if it is not known yet otherwise it will get it from a cache
+ * 4) GurkenManager calls GurkenType#createInstance to create a Gurke.
+ *
+ * ===== Six tuple - Solution space =========
+ * Delegation:	    Separate-object     ->	GurkenManager
+ * Selection:	    By-subclassing	    -> Sublass of PhotoFactory determines the Selection
+ * Configuration:	-
+ * Instantiation:	In-code	            -> No configuration needed
+ * Initialization:	In-second-step      -> type-hierarchy can be too complex, client must determine super and subtypes at any time
+ * Building:        Default
  */
 public class Gurke extends DataObject{
     private Taste taste;
