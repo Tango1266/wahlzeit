@@ -27,22 +27,23 @@ package org.wahlzeit.model.coordinates.impl;
 import org.wahlzeit.model.coordinates.Coordinate;
 import org.wahlzeit.utils.Assert;
 import org.wahlzeit.utils.MathUtils;
-import org.wahlzeit.utils.Pattern;
-import org.wahlzeit.utils.PatternInstance;
+import org.wahlzeit.utils.annotations.PatternInstance;
+import org.wahlzeit.utils.annotations.pattern.impl.NullObject;
+import org.wahlzeit.utils.annotations.pattern.impl.TemplateMethod;
+import org.wahlzeit.utils.annotations.pattern.impl.ValueObject;
 
 import java.util.HashMap;
 
 @PatternInstance(
         pattern = {
-                Pattern.ValueObject.class,
-                Pattern.NullObject.class
+                ValueObject.class,
+                NullObject.class
         },
-        classRole = {
-                "Value Object",
-                "Abstract Object"
+        classRole = {ValueObject.ValueObject, NullObject.AbstractObject
         },
         participants = {
-                AbstractCoordinate.class
+                /*@ValueObject*/ AbstractCoordinate.class,
+                /*@NullObject*/ NoWhereCoordinate.class,
         }
 )
 public abstract class AbstractCoordinate implements Coordinate {
@@ -118,8 +119,8 @@ public abstract class AbstractCoordinate implements Coordinate {
     }
 
     @PatternInstance(
-            pattern = Pattern.TemplateMethod.class,
-            classRole = "AbstractClass",
+            pattern = TemplateMethod.class,
+            classRole = TemplateMethod.AbstractClass,
             participants = {
                     AbstractCoordinate.class, SphericCoordinate.class, CartesianCoordinate.class, NoWhereCoordinate.class
             }

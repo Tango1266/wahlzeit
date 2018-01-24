@@ -3,8 +3,8 @@ package org.wahlzeit.model.persistence;
 import org.wahlzeit.model.PhotoSize;
 import org.wahlzeit.services.CloudDB;
 import org.wahlzeit.services.LogBuilder;
-import org.wahlzeit.utils.Pattern;
-import org.wahlzeit.utils.PatternInstance;
+import org.wahlzeit.utils.annotations.PatternInstance;
+import org.wahlzeit.utils.annotations.pattern.impl.Adapter;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -12,8 +12,8 @@ import java.security.InvalidParameterException;
 import java.util.logging.Logger;
 
 @PatternInstance(
-		pattern = Pattern.Adapter.class,
-		classRole = "Adapter",
+		pattern = Adapter.class,
+		classRole = Adapter.Adapter,
 		participants = {
 				ImageStorage.class, DatastoreAdapter.class, CloudDB.class
 		}

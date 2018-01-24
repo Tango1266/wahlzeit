@@ -29,12 +29,12 @@ import org.wahlzeit.model.Photo;
 import org.wahlzeit.model.PhotoFactory;
 import org.wahlzeit.model.PhotoId;
 import org.wahlzeit.utils.Assert;
-import org.wahlzeit.utils.Pattern;
-import org.wahlzeit.utils.PatternInstance;
+import org.wahlzeit.utils.annotations.PatternInstance;
+import org.wahlzeit.utils.annotations.pattern.impl.AbstractFactory;
 
 @PatternInstance(
-        pattern = Pattern.AbstractFactory.class,
-        classRole = "Concrete Factory",
+        pattern = AbstractFactory.class,
+        classRole = AbstractFactory.ConcreteFactory,
         participants = {
                 PhotoFactory.class, GurkenPhotoFactory.class
         }

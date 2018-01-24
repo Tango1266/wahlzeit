@@ -26,8 +26,8 @@ package org.wahlzeit.model.coordinates.impl;
 
 import org.wahlzeit.model.coordinates.Coordinate;
 import org.wahlzeit.utils.Assert;
-import org.wahlzeit.utils.Pattern;
-import org.wahlzeit.utils.PatternInstance;
+import org.wahlzeit.utils.annotations.PatternInstance;
+import org.wahlzeit.utils.annotations.pattern.impl.TemplateMethod;
 
 /**
  */
@@ -90,8 +90,8 @@ public class SphericCoordinate extends AbstractCoordinate {
     }
 
     @PatternInstance(
-            pattern = Pattern.TemplateMethod.class,
-            classRole = "Concrete Class",
+            pattern = TemplateMethod.class,
+            classRole = TemplateMethod.ConcreteClass,
             participants = {
                     AbstractCoordinate.class, SphericCoordinate.class, CartesianCoordinate.class, NoWhereCoordinate.class
             }

@@ -28,8 +28,8 @@ import org.wahlzeit.model.config.DomainCfg;
 import org.wahlzeit.model.coordinates.Coordinate;
 import org.wahlzeit.utils.Assert;
 import org.wahlzeit.utils.MathUtils;
-import org.wahlzeit.utils.Pattern;
-import org.wahlzeit.utils.PatternInstance;
+import org.wahlzeit.utils.annotations.PatternInstance;
+import org.wahlzeit.utils.annotations.pattern.impl.TemplateMethod;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -88,8 +88,8 @@ public class CartesianCoordinate extends AbstractCoordinate {
     }
 
     @PatternInstance(
-            pattern = Pattern.TemplateMethod.class,
-            classRole = "Concrete Class",
+            pattern = TemplateMethod.class,
+            classRole = TemplateMethod.ConcreteClass,
             participants = {
                     AbstractCoordinate.class, SphericCoordinate.class, CartesianCoordinate.class, NoWhereCoordinate.class
             }

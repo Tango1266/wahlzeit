@@ -32,8 +32,8 @@ import org.wahlzeit.services.LogBuilder;
 import org.wahlzeit.services.ObjectManager;
 import org.wahlzeit.services.Persistent;
 import org.wahlzeit.utils.Assert;
-import org.wahlzeit.utils.Pattern;
-import org.wahlzeit.utils.PatternInstance;
+import org.wahlzeit.utils.annotations.PatternInstance;
+import org.wahlzeit.utils.annotations.pattern.impl.Singleton;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -41,11 +41,9 @@ import java.util.*;
 import java.util.logging.Logger;
 
 @PatternInstance(
-        pattern = Pattern.Singleton.class,
-        classRole = "Singleton",
-        participants = {
-                PhotoManager.class
-        }
+        pattern = Singleton.class,
+        classRole = Singleton.Singleton,
+        participants = PhotoManager.class
 )
 /**
  * A photo manager provides access to and manages photos.

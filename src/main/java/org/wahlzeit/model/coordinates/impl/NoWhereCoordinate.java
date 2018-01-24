@@ -25,14 +25,14 @@
 package org.wahlzeit.model.coordinates.impl;
 
 import org.wahlzeit.model.coordinates.Coordinate;
-import org.wahlzeit.utils.Pattern;
-import org.wahlzeit.utils.PatternInstance;
+import org.wahlzeit.utils.annotations.PatternInstance;
+import org.wahlzeit.utils.annotations.pattern.impl.NullObject;
 
 import static java.lang.System.identityHashCode;
 
 @PatternInstance(
-        pattern = Pattern.NullObject.class,
-        classRole = "Null Object",
+        pattern = NullObject.class,
+        classRole = NullObject.NullObject,
         participants = {
                 AbstractCoordinate.class, NoWhereCoordinate.class,
         }

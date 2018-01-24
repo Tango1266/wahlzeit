@@ -82,7 +82,7 @@ public class Assert {
     }
 
     public static void notNull(Object notNullobject, String objectSpecification) throws IllegalStateException {
-        String object = objectSpecification != null && objectSpecification.length() > 0 ? objectSpecification : "Object";
+        String object = objectSpecification != null && objectSpecification.length() > 0 ? objectSpecification : "BaseObject";
         if (notNullobject == null) {
             RuntimeException exception = new IllegalStateException(object + " must not be null");
             DomainCfg.logError(Assert.class, exception);

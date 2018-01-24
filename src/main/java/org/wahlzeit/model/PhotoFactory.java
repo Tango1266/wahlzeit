@@ -27,14 +27,14 @@ package org.wahlzeit.model;
 import org.wahlzeit.model.gurkenDomain.GurkenPhotoFactory;
 import org.wahlzeit.services.LogBuilder;
 import org.wahlzeit.utils.Assert;
-import org.wahlzeit.utils.Pattern;
-import org.wahlzeit.utils.PatternInstance;
+import org.wahlzeit.utils.annotations.PatternInstance;
+import org.wahlzeit.utils.annotations.pattern.impl.AbstractFactory;
 
 import java.util.logging.Logger;
 
 @PatternInstance(
-        pattern = Pattern.AbstractFactory.class,
-        classRole = "Abstract Factory",
+        pattern = AbstractFactory.class,
+        classRole = AbstractFactory.AbstractFactory,
         participants = {
                 PhotoFactory.class, GurkenPhotoFactory.class
         }
