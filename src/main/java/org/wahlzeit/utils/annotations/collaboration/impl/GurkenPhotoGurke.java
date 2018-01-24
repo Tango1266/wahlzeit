@@ -1,9 +1,9 @@
 /*
  *  Copyright
  *
- *  Classname: Pattern
+ *  Classname: GurkenPhotoGurke
  *  Author: Tango1266
- *  Version: 24.01.18 19:51
+ *  Version: 24.01.18 21:56
  *
  *  This file is part of the Wahlzeit photo rating application.
  *
@@ -22,12 +22,16 @@
  *  <http://www.gnu.org/licenses/>
  */
 
-package org.wahlzeit.utils.annotations.pattern;
+package org.wahlzeit.utils.annotations.collaboration.impl;
 
-public abstract class Pattern {
-    public static String[] roles;
-    public static String description;
+import org.wahlzeit.utils.annotations.collaboration.CollaborationAbstract;
 
-    public String Client = "Client";
+public class GurkenPhotoGurke extends CollaborationAbstract {
+    public static final String Gurke = "Gurke";
+    public static final String GurkenPhoto = "GurkenPhoto";
 
+    public GurkenPhotoGurke() {
+        purpose = "provide main domain functionality";
+    }
 }
+

@@ -1,9 +1,9 @@
 /*
  *  Copyright
  *
- *  Classname: Pattern
+ *  Classname: Collaboration
  *  Author: Tango1266
- *  Version: 24.01.18 19:51
+ *  Version: 24.01.18 22:16
  *
  *  This file is part of the Wahlzeit photo rating application.
  *
@@ -22,12 +22,8 @@
  *  <http://www.gnu.org/licenses/>
  */
 
-package org.wahlzeit.utils.annotations.pattern;
+package org.wahlzeit.utils.annotations.collaboration;
 
-public abstract class Pattern {
-    public static String[] roles;
-    public static String description;
-
-    public String Client = "Client";
-
+public interface Collaboration {
+    String getPurpose();
 }

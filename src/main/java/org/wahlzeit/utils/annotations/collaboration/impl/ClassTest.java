@@ -1,9 +1,9 @@
 /*
  *  Copyright
  *
- *  Classname: Pattern
+ *  Classname: ClassTest
  *  Author: Tango1266
- *  Version: 24.01.18 19:51
+ *  Version: 24.01.18 22:01
  *
  *  This file is part of the Wahlzeit photo rating application.
  *
@@ -22,12 +22,19 @@
  *  <http://www.gnu.org/licenses/>
  */
 
-package org.wahlzeit.utils.annotations.pattern;
+package org.wahlzeit.utils.annotations.collaboration.impl;
 
-public abstract class Pattern {
-    public static String[] roles;
-    public static String description;
+import org.wahlzeit.utils.annotations.collaboration.CollaborationAbstract;
 
-    public String Client = "Client";
+/**
+ * Collaboration between the class and its coresponding test class
+ */
+public class ClassTest extends CollaborationAbstract {
 
+    public static final String Class = "Class";
+    public static final String Test = "Test";
+
+    public ClassTest() {
+        purpose = "ensures that the Class behaves as required";
+    }
 }

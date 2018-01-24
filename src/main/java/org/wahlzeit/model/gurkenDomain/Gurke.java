@@ -27,13 +27,27 @@ package org.wahlzeit.model.gurkenDomain;
 import com.googlecode.objectify.annotation.Ignore;
 import org.wahlzeit.services.DataObject;
 import org.wahlzeit.utils.Assert;
-import org.wahlzeit.utils.Pattern;
-import org.wahlzeit.utils.PatternInstance;
+import org.wahlzeit.utils.annotations.Collaboration;
+import org.wahlzeit.utils.annotations.PatternInstance;
+import org.wahlzeit.utils.annotations.Role;
+import org.wahlzeit.utils.annotations.collaboration.impl.GurkenPhotoGurke;
+import org.wahlzeit.utils.annotations.pattern.impl.Manager;
+import org.wahlzeit.utils.annotations.pattern.impl.TypeObject;
 
 @PatternInstance(
-        pattern = Pattern.TypeObject.class,
-        classRole = "Object",
+        pattern = TypeObject.class,
+        classRole = TypeObject.BaseObject,
         participants = {Gurke.class, GurkenType.class}
+)
+@Collaboration(
+        type = {TypeObject.class, GurkenPhotoGurke.class, Manager.class},
+        role = {TypeObject.TypeObject, GurkenPhotoGurke.Gurke, Manager.Element},
+        instances = {
+                Gurke.class,
+                /*@TypeObject*/  GurkenType.class,
+                /*@GurkenPhoto*/ GurkenPhoto.class,
+                /*@Manager*/ GurkenManager.class,
+        }
 )
 /**
  * Represents a specific Gurke of a certain GurkenType
@@ -58,13 +72,13 @@ public class Gurke extends DataObject{
     private int size;
     //Metainformation
     private String strain;
-    //attribute is required by uml diagram
 
-    @Ignore
+    @Ignore  //attribute is required by uml diagram
     public GurkenManager manager = GurkenManager.getInstance();
-    @Ignore
+    @Ignore /*public due to uml specification*/
     public GurkenType type;
 
+    @Role({TypeObject.TypeObject})
     public Gurke(GurkenType type, Taste taste, int size) {
         setType(type);
         setTaste(taste);
@@ -72,52 +86,63 @@ public class Gurke extends DataObject{
         setStrain(type.getStrain());
     }
 
+    @Role({TypeObject.TypeObject})
     public Gurke(GurkenType type) {
         setType(type);
         setStrain(type.getStrain());
     }
 
+    @Role({TypeObject.TypeObject})
     public void setType(GurkenType type) {
         Assert.notNull(type, "GurkenType");
         this.type = type;
     }
 
-    public GurkenType getType() {
-        return type;
-    }
-
-    public void setSize(int size) {
-        Assert.areValidDoubles(size);
-        this.size = size;
-    }
-
+    @Role({TypeObject.TypeObject})
     public void setTaste(Taste taste) {
         Assert.notNull(taste, "Taste");
         this.taste = taste;
     }
 
-    public int getSize() {
-        return size;
+    @Role({TypeObject.TypeObject})
+    public void setSize(int size) {
+        Assert.areValidDoubles(size);
+        this.size = size;
     }
 
-    public Taste getTaste() {
-        return taste;
-    }
-
-    public String getStrain() {
-        return strain;
-    }
-
+    @Role(TypeObject.TypeObject)
     public void setStrain(String strain) {
         this.strain = strain;
     }
 
+    @Role({GurkenPhotoGurke.Gurke})
+    public GurkenType getType() {
+        return type;
+    }
+
+    @Role({GurkenPhotoGurke.Gurke})
+    public Taste getTaste() {
+        return taste;
+    }
+
+    @Role({GurkenPhotoGurke.Gurke})
+    public String getStrain() {
+        return strain;
+    }
+
+    @Role({GurkenPhotoGurke.Gurke})
+    public int getSize() {
+        return size;
+    }
+
     @Override
+    @Role({Manager.Element})
     public int hashCode() {
         return toString().hashCode();
     }
 
     @Override
+    @Role({Manager.Element})
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -141,6 +166,7 @@ public class Gurke extends DataObject{
     }
 
     @Override
+    @Role({Manager.Element})
     public String toString() {
         return "Gurke{" +
                 "taste=" + taste +

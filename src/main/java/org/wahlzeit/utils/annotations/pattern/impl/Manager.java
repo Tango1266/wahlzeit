@@ -1,9 +1,9 @@
 /*
  *  Copyright
  *
- *  Classname: Pattern
+ *  Classname: Manager
  *  Author: Tango1266
- *  Version: 24.01.18 19:51
+ *  Version: 24.01.18 22:53
  *
  *  This file is part of the Wahlzeit photo rating application.
  *
@@ -22,12 +22,16 @@
  *  <http://www.gnu.org/licenses/>
  */
 
-package org.wahlzeit.utils.annotations.pattern;
+package org.wahlzeit.utils.annotations.pattern.impl;
 
-public abstract class Pattern {
-    public static String[] roles;
-    public static String description;
+import org.wahlzeit.utils.annotations.pattern.Pattern;
 
-    public String Client = "Client";
+public class Manager extends Pattern {
+    public static final String Manager = "Manager";
+    public static final String Element = "Element";
 
+    public Manager() {
+        description = "\"Centralize object management in one place.(ADAP, 2017)\"";
+        roles = new String[]{"Abstract BaseObject, Null BaseObject"};
+    }
 }
