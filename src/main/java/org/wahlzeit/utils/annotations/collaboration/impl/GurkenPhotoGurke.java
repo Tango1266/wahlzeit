@@ -27,8 +27,8 @@ package org.wahlzeit.utils.annotations.collaboration.impl;
 import org.wahlzeit.utils.annotations.collaboration.CollaborationAbstract;
 
 public class GurkenPhotoGurke extends CollaborationAbstract {
-    public static final String Gurke = "Gurke";
-    public static final String GurkenPhoto = "GurkenPhoto";
+    public static final String Service = "Service";
+    public static final String Cliente = "Cliente";
 
     public GurkenPhotoGurke() {
         purpose = "provide main domain functionality";

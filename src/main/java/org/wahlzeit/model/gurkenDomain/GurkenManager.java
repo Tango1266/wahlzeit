@@ -40,7 +40,7 @@ import java.util.concurrent.ConcurrentHashMap;
         }
 )
 /**
- * Manages the domain subject Gurke and its corresponding Types.
+ * Manages the domain subject Service and its corresponding Types.
  * Should be understood as a single touch point to interact with the domain subject.
  */
 public class GurkenManager extends ObjectManager{
