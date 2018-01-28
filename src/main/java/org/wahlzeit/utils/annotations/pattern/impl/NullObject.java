@@ -1,9 +1,9 @@
 /*
  *  Copyright
  *
- *  Classname: PatternInstance
+ *  Classname: NullObject
  *  Author: Tango1266
- *  Version: 23.12.17 12:42
+ *  Version: 24.01.18 20:42
  *
  *  This file is part of the Wahlzeit photo rating application.
  *
@@ -22,13 +22,16 @@
  *  <http://www.gnu.org/licenses/>
  */
 
-package org.wahlzeit.utils;
+package org.wahlzeit.utils.annotations.pattern.impl;
 
-public @interface PatternInstance {
-    Class[] pattern();
+import org.wahlzeit.utils.annotations.pattern.Pattern;
 
-    String[] classRole();
+public class NullObject extends Pattern {
+    public static final String NullObject = "NullObject";
+    public static final String AbstractObject = "AbstractObject";
 
-    Class[] participants();
+    public NullObject() {
+        description = "\"A Null BaseObject is an object with no referenced value or with defined neutral (\"null\") behavior\" (wikipedia.org, 2018)";
+        roles = new String[]{"Abstract BaseObject, Null BaseObject"};
+    }
 }
-

@@ -50,6 +50,7 @@ import org.wahlzeit.model.PhotoId;
  */
 @Entity
 @Subclass
+
 public class GurkenPhoto extends Photo {
 
     private Gurke gurkenInfo;

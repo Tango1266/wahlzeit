@@ -26,9 +26,19 @@ package org.wahlzeit.model.gurkenDomain;
 
 import org.wahlzeit.services.ObjectManager;
 import org.wahlzeit.utils.Assert;
+import org.wahlzeit.utils.annotations.Collaboration;
+import org.wahlzeit.utils.annotations.Role;
+import org.wahlzeit.utils.annotations.pattern.impl.Manager;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+@Collaboration(
+        type = Manager.class,
+        role = Manager.Manager,
+        instances = {
+                GurkenManager.class, GurkenType.class, Gurke.class
+        }
+)
 /**
  * Manages the domain subject Gurke and its corresponding Types.
  * Should be understood as a single touch point to interact with the domain subject.
@@ -56,6 +66,7 @@ public class GurkenManager extends ObjectManager{
      * in {@link GurkenManager#getType(String)}.
      * @methodtype query-, mutation-, factory method
      */
+    @Role({Manager.Manager})
     public Gurke getGurke(String type, Taste taste, int size) {
         GurkenType gt = getType(type);
         Gurke gurke = gt.createInstance(taste, size);
@@ -70,6 +81,7 @@ public class GurkenManager extends ObjectManager{
     /**
      * {@link GurkenManager#getGurke(String, Taste, int)}
      */
+    @Role({Manager.Manager})
     public Gurke getGurke(String type) {
         return getGurke(type, Taste.UNSPECIFIED, 0);
     }
@@ -79,6 +91,7 @@ public class GurkenManager extends ObjectManager{
      * Eventually, it will create and cache the desired object.
      * @methodtype query-, mutation-, factory method
      */
+    @Role({Manager.Manager})
     public GurkenType getType(String gurkenTypeName) {
         assertIsValidTypeName(gurkenTypeName);
         if (!types.containsKey(gurkenTypeName)) {
@@ -92,6 +105,7 @@ public class GurkenManager extends ObjectManager{
         Assert.stringNotEmpty(gurkenTypeName);
     }
 
+    @Role({Manager.Manager})
     private GurkenType createType(String gurkenType) {
         GurkenType newGurkenType = new GurkenType(gurkenType);
         types.put(gurkenType, newGurkenType);

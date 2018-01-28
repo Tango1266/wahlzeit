@@ -27,8 +27,10 @@ package org.wahlzeit.model.gurkenDomain;
 import com.googlecode.objectify.annotation.Ignore;
 import org.wahlzeit.services.DataObject;
 import org.wahlzeit.utils.Assert;
-import org.wahlzeit.utils.Pattern;
-import org.wahlzeit.utils.PatternInstance;
+import org.wahlzeit.utils.annotations.Collaboration;
+import org.wahlzeit.utils.annotations.PatternInstance;
+import org.wahlzeit.utils.annotations.Role;
+import org.wahlzeit.utils.annotations.pattern.impl.TypeObject;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -36,9 +38,14 @@ import java.util.Iterator;
 import java.util.Set;
 
 @PatternInstance(
-        pattern = Pattern.TypeObject.class,
-        classRole = "Type Object",
+        pattern = TypeObject.class,
+        classRole = TypeObject.TypeObject,
         participants = {Gurke.class, GurkenType.class}
+)
+@Collaboration(
+        type = {TypeObject.class},
+        role = TypeObject.TypeObject,
+        instances = {Gurke.class, GurkenType.class}
 )
 /**
  * Represents a certain GurkenType with its meta information.
@@ -53,6 +60,7 @@ public class GurkenType extends DataObject {
     @Ignore
     public /*because of uml-req*/ GurkenManager manager;
 
+    @Role(TypeObject.TypeObject)
     public GurkenType(String strain) {
         setStrain(strain);
     }
@@ -61,11 +69,13 @@ public class GurkenType extends DataObject {
         manager = GurkenManager.getInstance();
     }
 
+    @Role(TypeObject.TypeObject)
     public boolean hasInstance(Gurke gurke) {
         Assert.notNull(gurke, "Gurken Instance");
         return isSubType(gurke.getType());
     }
 
+    @Role(TypeObject.TypeObject)
     public boolean isSubType(GurkenType gurkenType) {
         Assert.notNull(gurkenType, "Gurken Subtype");
 
@@ -82,14 +92,17 @@ public class GurkenType extends DataObject {
         return false;
     }
 
+    @Role(TypeObject.TypeObject)
     public GurkenType getSuperType() {
         return superType;
     }
 
+    @Role(TypeObject.TypeObject)
     public void setSuperType(GurkenType superType) {
         this.superType = superType;
     }
 
+    @Role(TypeObject.TypeObject)
     public Iterator<GurkenType> getSubTypeIterator() {
         return subTypes.iterator();
     }
@@ -97,16 +110,19 @@ public class GurkenType extends DataObject {
     /**
      * @methodtype mutation method
      */
+    @Role(TypeObject.TypeObject)
     public void addSubType(GurkenType gurkenType) {
         Assert.notNull(gurkenType, "GurkenSubType");
         gurkenType.setSuperType(this);
         subTypes.add(gurkenType);
     }
 
+    @Role(TypeObject.TypeObject)
     public String getStrain() {
         return strain;
     }
 
+    @Role(TypeObject.TypeObject)
     public void setStrain(String strain) {
         Assert.stringStartsWithLiterals(strain, "cucumber-type");
         this.strain = strain;
@@ -115,6 +131,7 @@ public class GurkenType extends DataObject {
     /**
      * @methodtype factory method
      */
+    @Role(TypeObject.TypeObject)
     public Gurke createInstance(Taste taste, int size) {
         return new Gurke(this, taste, size);
     }

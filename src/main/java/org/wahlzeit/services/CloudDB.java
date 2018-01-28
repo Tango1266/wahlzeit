@@ -8,14 +8,14 @@ import org.wahlzeit.model.config.DomainCfg;
 import org.wahlzeit.model.persistence.DatastoreAdapter;
 import org.wahlzeit.model.persistence.DatastoreAdapter.ImageWrapper;
 import org.wahlzeit.model.persistence.ImageStorage;
-import org.wahlzeit.utils.Pattern;
-import org.wahlzeit.utils.PatternInstance;
+import org.wahlzeit.utils.annotations.PatternInstance;
+import org.wahlzeit.utils.annotations.pattern.impl.Adapter;
 
 import java.util.List;
 
 @PatternInstance(
-        pattern = Pattern.Adapter.class,
-        classRole = "Adaptee",
+        pattern = Adapter.class,
+        classRole = Adapter.Adaptee,
         participants = {
                 ImageStorage.class, DatastoreAdapter.class, CloudDB.class
         }
