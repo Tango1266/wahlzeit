@@ -46,6 +46,7 @@ import org.wahlzeit.utils.annotations.pattern.impl.TypeObject;
                 Gurke.class,
                 /*@TypeObject*/  GurkenType.class,
                 /*@Client*/ GurkenPhoto.class,
+
                 /*@Manager*/ GurkenManager.class,
         }
 )
@@ -121,6 +122,7 @@ public class Gurke extends DataObject{
     public GurkenType getType() {
         return type;
     }
+
 
     @Role({GurkenPhotoGurke.Service})
     public Taste getTaste() {

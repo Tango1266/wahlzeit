@@ -27,6 +27,7 @@ package org.wahlzeit.utils.annotations.collaboration.impl;
 import org.wahlzeit.utils.annotations.collaboration.CollaborationAbstract;
 
 public class GurkenPhotoGurke extends CollaborationAbstract {
+
     public static final String Service = "Service";
     public static final String Cliente = "Cliente";
 

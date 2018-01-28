@@ -34,5 +34,4 @@ public class Manager extends Pattern {
         description = "\"Centralize object management in one place.(ADAP, 2017)\"";
         roles = new String[]{"Abstract BaseObject, Null BaseObject"};
     }
-
 }
