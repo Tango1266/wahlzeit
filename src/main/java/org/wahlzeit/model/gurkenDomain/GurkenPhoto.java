@@ -36,7 +36,7 @@ import org.wahlzeit.model.PhotoId;
  *  * ===== Sequence of method calls =========
  * 0) GurkenManager calls PhotoUtil#createPhoto
  * 1) PhotoUtil calls GurkenPhotoFactory#createPhoto
- * 2) GurkenPhotoFactory creates a GurkenPhoto with a fully specified signature
+ * 2) GurkenPhotoFactory creates a Cliente with a fully specified signature
  * 3) GurkenManager creates eventually a GurkenType if it is not known yet otherwise it will get it from a cache
  * 4) GurkenManager calls GurkenType#createInstance to create a Gurke.
  *

@@ -41,23 +41,24 @@ import org.wahlzeit.utils.annotations.pattern.impl.TypeObject;
 )
 @Collaboration(
         type = {TypeObject.class, GurkenPhotoGurke.class, Manager.class},
-        role = {TypeObject.TypeObject, GurkenPhotoGurke.Gurke, Manager.Element},
+        role = {TypeObject.BaseObject, GurkenPhotoGurke.Service, Manager.Element},
         instances = {
                 Gurke.class,
                 /*@TypeObject*/  GurkenType.class,
-                /*@GurkenPhoto*/ GurkenPhoto.class,
+                /*@Client*/ GurkenPhoto.class,
+
                 /*@Manager*/ GurkenManager.class,
         }
 )
 /**
- * Represents a specific Gurke of a certain GurkenType
+ * Represents a specific Service of a certain GurkenType
  *
  * ===== Sequence of method calls =========
  * 0) GurkenManager calls PhotoUtil#createPhoto
  * 1) PhotoUtil calls GurkenPhotoFactory#createPhoto
- * 2) GurkenPhotoFactory calls GurkenManager#getGurke with a fully specified signature to get a Gurke
+ * 2) GurkenPhotoFactory calls GurkenManager#getGurke with a fully specified signature to get a Service
  * 2) GurkenManager creates eventually a GurkenType if it is not known yet otherwise it will get it from a cache
- * 4) GurkenManager calls GurkenType#createInstance to create a Gurke.
+ * 4) GurkenManager calls GurkenType#createInstance to create a Service.
  *
  * ===== Six tuple - Solution space =========
  * Delegation:	    Separate-object     ->	GurkenManager
@@ -117,22 +118,23 @@ public class Gurke extends DataObject{
         this.strain = strain;
     }
 
-    @Role({GurkenPhotoGurke.Gurke})
+    @Role({GurkenPhotoGurke.Service})
     public GurkenType getType() {
         return type;
     }
 
-    @Role({GurkenPhotoGurke.Gurke})
+
+    @Role({GurkenPhotoGurke.Service})
     public Taste getTaste() {
         return taste;
     }
 
-    @Role({GurkenPhotoGurke.Gurke})
+    @Role({GurkenPhotoGurke.Service})
     public String getStrain() {
         return strain;
     }
 
-    @Role({GurkenPhotoGurke.Gurke})
+    @Role({GurkenPhotoGurke.Service})
     public int getSize() {
         return size;
     }
@@ -170,7 +172,7 @@ public class Gurke extends DataObject{
     @Override
     @Role({Manager.Element})
     public String toString() {
-        return "Gurke{" +
+        return "Service{" +
                 "taste=" + taste +
                 ", size=" + size +
                 ", type=" + type +

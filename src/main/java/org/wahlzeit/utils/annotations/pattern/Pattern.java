@@ -24,10 +24,18 @@
 
 package org.wahlzeit.utils.annotations.pattern;
 
-public abstract class Pattern {
+import org.wahlzeit.utils.annotations.collaboration.Collaboration;
+
+public abstract class Pattern implements Collaboration {
+
     public static String[] roles;
     public static String description;
 
     public String Client = "Client";
+
+    @Override
+    public String getPurpose() {
+        return description;
+    }
 
 }
