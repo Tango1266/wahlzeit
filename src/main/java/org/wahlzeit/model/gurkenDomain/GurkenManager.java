@@ -30,7 +30,7 @@ import org.wahlzeit.utils.annotations.Collaboration;
 import org.wahlzeit.utils.annotations.Role;
 import org.wahlzeit.utils.annotations.pattern.impl.Manager;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Collaboration(
         type = Manager.class,
@@ -46,8 +46,9 @@ import java.util.HashMap;
 public class GurkenManager extends ObjectManager{
 
     private static final GurkenManager instance = new GurkenManager();
-    private HashMap<String, GurkenType> types = new HashMap<>();
-    private HashMap<Integer, Gurke> gurken = new HashMap<>();
+    /*Threadsafe implementations of HashMap*/
+    private ConcurrentHashMap<String, GurkenType> types = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Integer, Gurke> gurken = new ConcurrentHashMap<>();
 
     protected GurkenType gurkenType;
 
