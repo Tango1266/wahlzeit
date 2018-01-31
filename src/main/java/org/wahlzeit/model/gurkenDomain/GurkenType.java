@@ -24,6 +24,8 @@
 
 package org.wahlzeit.model.gurkenDomain;
 
+import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Ignore;
 import org.wahlzeit.services.DataObject;
 import org.wahlzeit.utils.Assert;
@@ -51,7 +53,9 @@ import java.util.Set;
  * Represents a certain GurkenType with its meta information.
  * GurkenTypes will be determined during runtime
  */
+@Entity
 public class GurkenType extends DataObject {
+    @Id
     private String strain;
     @Ignore
     private Set<GurkenType> subTypes = Collections.synchronizedSet(new HashSet<GurkenType>());

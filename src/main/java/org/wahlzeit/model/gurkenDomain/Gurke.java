@@ -24,6 +24,8 @@
 
 package org.wahlzeit.model.gurkenDomain;
 
+import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Ignore;
 import org.wahlzeit.services.DataObject;
 import org.wahlzeit.utils.Assert;
@@ -68,7 +70,11 @@ import org.wahlzeit.utils.annotations.pattern.impl.TypeObject;
  * Initialization:	In-second-step      -> type-hierarchy can be too complex, client must determine super and subtypes at any time
  * Building:        Default
  */
+@Entity
 public class Gurke extends DataObject{
+    @Id
+    private String id;
+
     private Taste taste;
     private int size;
     /* Metainformation provided from type, so
@@ -87,6 +93,7 @@ public class Gurke extends DataObject{
         setTaste(taste);
         setSize(size);
         setStrain(type.getStrain());
+        id = getStrain() + getSize();
     }
 
     @Role({TypeObject.TypeObject})

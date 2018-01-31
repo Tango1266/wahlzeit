@@ -26,9 +26,7 @@ package org.wahlzeit.model.config;
 
 import org.wahlzeit.model.PhotoFactory;
 import org.wahlzeit.model.PhotoManager;
-import org.wahlzeit.model.gurkenDomain.GurkenPhoto;
-import org.wahlzeit.model.gurkenDomain.GurkenPhotoFactory;
-import org.wahlzeit.model.gurkenDomain.GurkenPhotoManager;
+import org.wahlzeit.model.gurkenDomain.*;
 import org.wahlzeit.services.LogBuilder;
 
 import java.util.Arrays;
@@ -76,7 +74,9 @@ public class DomainCfg {
 
     private static List<Class> getGurkenDomainObjects() {
         return new LinkedList<Class>(Arrays.asList(
-                GurkenPhoto.class
+                GurkenPhoto.class,
+                Gurke.class,
+                GurkenType.class
         ));
     }
 }
