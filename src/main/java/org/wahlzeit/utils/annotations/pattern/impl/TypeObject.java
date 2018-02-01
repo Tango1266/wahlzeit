@@ -31,7 +31,7 @@ public class TypeObject {
     public static final String BaseObject = "BaseObject";
 
     public TypeObject() {
-        Pattern.description = "\"Allow the flexible creation of new “classes” by creating a single class, each instance of which represents a different type of object. \" (http://gameprogrammingpatterns.com/type-object.html, 2018)";
+        Pattern.description = "\"Allow the flexible creation of new 'classes' by creating a single class, each instance of which represents a different type of object. \" (http://gameprogrammingpatterns.com/type-object.html, 2018)";
         Pattern.roles = new String[]{"BaseObject", "Type BaseObject"};
     }
 }
