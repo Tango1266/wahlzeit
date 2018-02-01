@@ -25,38 +25,25 @@
 package org.wahlzeit.handlers;
 
 import org.wahlzeit.model.*;
+import org.wahlzeit.services.LogBuilder;
 import org.wahlzeit.utils.HtmlUtil;
 import org.wahlzeit.webparts.WebPart;
 import org.wahlzeit.webparts.Writable;
 import org.wahlzeit.webparts.WritableList;
 
+import java.util.logging.Logger;
+
 /**
  * A handler class for a specific web page.
  */
 public class ShowUserHomePageHandler extends AbstractWebPageHandler {
+    private static final Logger log = Logger.getLogger(ShowUserHomePageHandler.class.getName());
 
     /**
      *
      */
     public ShowUserHomePageHandler() {
         initialize(PartUtil.SHOW_USER_HOME_PAGE_FILE, AccessRights.USER);
-    }
-
-    /**
-     *
-     */
-    protected Writable makeUserProfileForm(UserSession us) {
-        WebFormHandler handler = getFormHandler(PartUtil.SHOW_USER_PROFILE_FORM_NAME);
-        return handler.makeWebPart(us);
-    }
-
-    /**
-     *
-     */
-    protected Writable makeUserPhotoForm(UserSession us, Photo photo) {
-        us.setPhotoId(photo.getId());
-        WebFormHandler handler = getFormHandler(PartUtil.SHOW_USER_PHOTO_FORM_NAME);
-        return handler.makeWebPart(us);
     }
 
     /**
@@ -75,6 +62,12 @@ public class ShowUserHomePageHandler extends AbstractWebPageHandler {
             for (Photo photo : photos) {
                 // load it from the GurkenPhotoManager to make sure the same copy is used
                 photo = PhotoManager.getInstance().getPhotoFromId(photo.getId());
+                if (photo == null) {
+                    log.warning(LogBuilder.createSystemMessage().
+                            addMessage("A cached photo is null which should not happen. It might be cause by a change in the data model").toString());
+                    continue;
+                }
+
                 if (!photo.getStatus().isDeleted()) {
                     part = makeUserPhotoForm(us, photo);
                     list.append(part);
@@ -87,6 +80,23 @@ public class ShowUserHomePageHandler extends AbstractWebPageHandler {
         if (wasEmpty) {
             page.addString("photos", HtmlUtil.asP(us.getClient().getLanguageConfiguration().getNoPhotoUploaded()));
         }
+    }
+
+    /**
+     *
+     */
+    protected Writable makeUserProfileForm(UserSession us) {
+        WebFormHandler handler = getFormHandler(PartUtil.SHOW_USER_PROFILE_FORM_NAME);
+        return handler.makeWebPart(us);
+    }
+
+    /**
+     *
+     */
+    protected Writable makeUserPhotoForm(UserSession us, Photo photo) {
+        us.setPhotoId(photo.getId());
+        WebFormHandler handler = getFormHandler(PartUtil.SHOW_USER_PHOTO_FORM_NAME);
+        return handler.makeWebPart(us);
     }
 
 }
