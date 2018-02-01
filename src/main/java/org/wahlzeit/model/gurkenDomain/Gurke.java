@@ -81,6 +81,10 @@ public class Gurke extends DataObject{
     @Ignore /*required public attribute by uml spec*/
     public GurkenType type;
 
+    public Gurke() {
+        /*Demanded by google app-engine*/
+    }
+
     @Role({TypeObject.TypeObject})
     public Gurke(GurkenType type, Taste taste, int size) {
         setType(type);
